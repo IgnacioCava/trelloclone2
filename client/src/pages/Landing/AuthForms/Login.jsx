@@ -1,15 +1,16 @@
-import FormInput from "../../../components/Inputs/FormInput"
 import { useState } from "react"
+import { withAuth } from "../../../store/contexts/withAuth"
+import FormInput from "../../../components/Inputs/FormInput"
 import Button from "../../../components/buttons/BlueLink"
 import validate from "../../../helpers/formValidation"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Form, Back } from "./styled"
-import { withAuth } from "../../../store/contexts/withAuth"
 
 const Login = withAuth(({state, actions}) => {
     const { login } = actions
+
     const [form, setForm] = useState({
-        username: '',
+        email: '',
         password: ''
     })
     const [errors, setError] = useState('')
@@ -19,21 +20,20 @@ const Login = withAuth(({state, actions}) => {
         setError({...errors, ...validate(e.target, form)})
     }
 
+    const navigate = useNavigate()
     function handleSubmit(e){
         e.preventDefault()
         const errorCount = Object.values(errors)
-        if(errorCount.length===3&&!errorCount.filter(e=>e).length) login(form)
+        if(errorCount.length===3&&!errorCount.filter(e=>e).length) login(form, ()=>navigate('/home'))
     }
 
     return (
             <Form onSubmit={handleSubmit}>
-
                 <FormInput type='text' name='email' values={{form, errors}} label='Email' onChange={handleChange}/>
                 <FormInput type='text' name='password' values={{form, errors}} label='Password' onChange={handleChange}/>
 
                 <Button text='Log In'/>
                 <Back>Or <Link to='/landing/register'>Sign Up</Link> into a new account</Back>
-
             </Form>
     )
 })

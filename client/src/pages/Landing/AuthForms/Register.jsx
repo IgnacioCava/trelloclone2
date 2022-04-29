@@ -1,10 +1,10 @@
-import FormInput from "../../../components/Inputs/FormInput"
 import { useState, useMemo } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { withAuth } from "../../../store/contexts/withAuth"
+import FormInput from "../../../components/Inputs/FormInput"
 import Button from "../../../components/buttons/BlueLink"
 import validate from "../../../helpers/formValidation"
-import { Link } from "react-router-dom"
 import { Form, Back } from "./styled"
-import { withAuth } from "../../../store/contexts/withAuth"
 
 const Register = withAuth(({state, actions}) => {
     const { register } = actions
@@ -24,19 +24,18 @@ const Register = withAuth(({state, actions}) => {
         setError({...errors, ...validate(e.target, form)})
     }
 
+    const navigate = useNavigate()
     function handleSubmit(e){
         e.preventDefault()
         const errorCount = Object.values(errors)
-        if(errorCount.length===4&&!errorCount.filter(e=>e).length) register(form)
+        if(errorCount.length===4&&!errorCount.filter(e=>e).length) register(form, ()=>navigate('/home'))
     }
     return (
             <Form onSubmit={handleSubmit}>
-
                 {inputs.map(input => <FormInput key={input.name} type='text' name={input.name} values={{form, errors}} label={input.label} onChange={handleChange}/> )}
 
                 <Button text='Sign up'/>
                 <Back>Or <Link to='/landing/login'>Log In</Link> to an existing account</Back>
-
             </Form>
     )
 })

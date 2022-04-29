@@ -10,6 +10,7 @@ export default function AuthStore(props) {
     const dispatchedActions = {
         register: (...e)=>authActions.register(...e)(authDispatch),
         login: (...e)=>authActions.login(...e)(authDispatch),
+        loadUser: (...e)=>authActions.loadUser()(authDispatch),
         logout: (...e)=>authActions.logout(...e)(authDispatch)
     }
     

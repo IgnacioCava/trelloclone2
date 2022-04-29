@@ -1,5 +1,5 @@
 import logo from '../../../assets/Trello-logo.png';
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { Logo, AuthBox, LandingWrapper } from './styled'
 
 export default function Landing(){
@@ -11,7 +11,6 @@ export default function Landing(){
             <AuthBox>
                 <Outlet/>
             </AuthBox>
-
         </LandingWrapper>
     )
 }
