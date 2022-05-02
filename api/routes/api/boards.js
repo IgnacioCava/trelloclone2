@@ -8,9 +8,7 @@ const User = require('../../models/User');
 const Board = require('../../models/Board');
 
 // Add a board
-router.post(
-  '/',
-  [auth, [check('title', 'Title is required').not().isEmpty()]],
+router.post('/', [auth, [check('title', 'Title is required').not().isEmpty()]],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -24,17 +22,17 @@ router.post(
 
       // Add board to user's boards
       const user = await User.findById(req.user.id);
-      user.boards.unshift(board.id);
+      user.boards.unshift(board._id);
       await user.save();
 
       // Add user to board's members as admin
-      board.members.push({ user: user.id, name: user.name });
+      board.members.push({ user: user._id, username: user.username });
 
       // Log activity
-      board.activity.unshift({ text: `${user.name} created this board` });
+      board.activity.unshift({ text: `${user.username} created this board` });
       await board.save();
 
-      res.json(board);
+      res.json({title: board.title, id: board._id});
     } catch (err) {
       res.status(500).send(err.message);
     }
