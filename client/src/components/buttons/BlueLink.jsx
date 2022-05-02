@@ -1,17 +1,17 @@
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { AuthAction } from './styled'
 
-export default function Login({to, text}){
+export default function Button({to, text, children}){
     return (
         <AuthAction>
             {
                 to?
                 <Link to={to}>
-                    {text}
+                    {text||children}
                 </Link>
                 :
                 <button type='submit'>
-                    {text}
+                    {text||children}
                 </button>
             }
         </AuthAction>

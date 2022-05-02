@@ -30,7 +30,7 @@ const Login = withAuth(({state, actions}) => {
     return (
             <Form onSubmit={handleSubmit}>
                 <FormInput type='text' name='email' values={{form, errors}} label='Email' onChange={handleChange}/>
-                <FormInput type='text' name='password' values={{form, errors}} label='Password' onChange={handleChange}/>
+                <FormInput type='password' name='password' values={{form, errors}} label='Password' onChange={handleChange}/>
 
                 <Button text='Log In'/>
                 <Back>Or <Link to='/landing/register'>Sign Up</Link> into a new account</Back>

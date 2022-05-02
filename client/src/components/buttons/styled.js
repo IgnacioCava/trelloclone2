@@ -32,3 +32,26 @@ export const AuthAction = styled.div`
         background-color: #3a89ff;
     }
 `
+
+export const CloseButton = styled.button`
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ff0707;
+    border-radius: 10px;
+    box-sizing: border-box;
+    outline: none;
+    background: #ff0033;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
+    transition: .2s;
+    &:hover{
+        background: #fff;
+        color: #ff0033;
+        border-width: 3px;
+    }
+`
