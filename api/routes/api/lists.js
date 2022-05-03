@@ -41,6 +41,34 @@ router.post(
   }
 );
 
+// Delete a list
+router.delete('/:id', [auth, member],
+  async (req, res) => {
+    const boardId = req.header('boardId');
+    const listId = req.params.id;
+
+    try{
+      const board = await Board.findById(boardId).select('lists activity');
+      if(!board) throw new Error({message: 'Board not found', status: 404});
+      
+      const list = await List.findById(listId).select('title');
+      if(!list) throw new Error('List not found');
+
+      res.send(`List ${list.title} deleted`);
+      board.lists = board.lists.filter(list => list._id !== listId);
+      list.remove()
+  
+      board.activity.unshift({ text: `${req.user.name} deleted list ${list.title}` });
+      await board.save();
+    }
+    catch(err){
+      res.status(err.status||500).send(err.message)
+    }
+
+  }
+);
+
+
 // Get all of a board's lists
 router.get('/boardLists/:boardId', auth, async (req, res) => {
   try {
