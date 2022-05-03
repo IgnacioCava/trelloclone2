@@ -11,7 +11,11 @@ export default function AuthStore(props) {
         getBoards: ()=>actions.getBoards()(boardDispatch),
         getBoard: (...e)=>actions.getBoard(...e)(boardDispatch),
         createBoard: (...e)=>actions.createBoard(...e)(boardDispatch),
-        clear: ()=>actions.clear()(boardDispatch)
+        clear: ()=>actions.clear()(boardDispatch),
+        renameBoard: (...e)=>actions.renameBoard(...e)(boardDispatch),
+        addList: (...e)=>actions.addList(...e)(boardDispatch),
+        deleteList: (...e)=>actions.deleteList(...e)(boardDispatch),
+        renameList: (...e)=>actions.renameList(...e)(boardDispatch),
     }
     
     const value = {board, dispatchedActions}

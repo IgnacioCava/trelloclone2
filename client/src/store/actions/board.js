@@ -1,4 +1,4 @@
-import { GET_BOARD, GET_BOARDS, CREATE_BOARD, BOARD_ERROR, CLEAR } from '../actions'
+import { GET_BOARD, GET_BOARDS, CREATE_BOARD, BOARD_ERROR, CLEAR, RENAME_BOARD, ADD_LIST, DELETE_LIST, RENAME_LIST } from '../actions'
 import axios from 'axios'
 
 const config = {
@@ -8,9 +8,7 @@ const config = {
     }
 }
 
-function act (dispatch, type, payload) {
-    dispatch({type,payload})
-}
+const act = (dispatch, type, payload) => dispatch({type,payload})
 
 export const getBoards = () => async dispatch => {
     try {
@@ -28,6 +26,8 @@ export const getBoard = id => async dispatch => {
     try {
         const res = await axios.get(`/api/boards/${id}`, config)
         act(dispatch, GET_BOARD, res.data)
+        if (res) axios.defaults.headers.common['boardId'] = id;
+        else delete axios.defaults.headers.common['boardId'];
     } catch (err) {
         act(dispatch, BOARD_ERROR, err.response.data.message)
     }
@@ -38,6 +38,46 @@ export const createBoard = formData => async dispatch => {
         const body = JSON.stringify(formData)
         const res = await axios.post('/api/boards', body, config)
         act(dispatch, CREATE_BOARD, res.data)
+    } catch (err) {
+        act(dispatch, BOARD_ERROR, err.response.data.message)
+    }
+}
+
+export const renameBoard = (id, title) => async dispatch => {
+    try {
+        act(dispatch, RENAME_BOARD, {id, title})
+        const body = JSON.stringify({title})
+        await axios.patch(`/api/boards/rename/${id}`, body, config)
+    } catch (err) {
+        act(dispatch, BOARD_ERROR, err.response.data.message)
+    }
+}
+
+export const addList = title => async dispatch => {
+    try {
+        act(dispatch, ADD_LIST, {title})
+        const body = JSON.stringify({title})
+        const res = await axios.post(`/api/lists`, body, config)
+        act(dispatch, ADD_LIST, res.data)
+    } catch (err) {
+        act(dispatch, BOARD_ERROR, err.response.data.message)
+    }
+}
+
+export const deleteList = id => async dispatch => {
+    try {
+        act(dispatch, DELETE_LIST, {id})
+        await axios.delete(`/api/lists/${id}`, config)
+    } catch (err) {
+        act(dispatch, BOARD_ERROR, err.response.data.message)
+    }
+}
+
+export const renameList = (id, title) => async dispatch => {
+    try {
+        act(dispatch, RENAME_LIST, {id, title})
+        const body = JSON.stringify({title})
+        await axios.patch(`/api/lists/rename/${id}`, body, config)
     } catch (err) {
         act(dispatch, BOARD_ERROR, err.response.data.message)
     }

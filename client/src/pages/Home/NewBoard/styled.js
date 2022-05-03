@@ -23,6 +23,13 @@ export const Box = styled.form`
     width: 30vmax;
     height: fit-content;
     padding:20px;
+    box-sizing: content-box;
     background-color: white;
+    position: relative;
+`
+
+export const CloseContainer = styled.div`
     position: absolute;
+    top: 10px;
+    right: 10px;
 `
