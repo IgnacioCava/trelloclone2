@@ -81,11 +81,11 @@ router.patch('/edit/:id', [auth, member], async (req, res) => {
     if (description || description === '') card.description = description;
     if (label || label === 'none') card.label = label;
 
+    res.send("Card edited successfully");
     await card.save();
-
-    res.json(card);
   } catch (err) {
-    res.status(err.status).send(err.message);
+    console.log(err)
+    res.status(err.status||500).send(err.message);
   }
 });
 
