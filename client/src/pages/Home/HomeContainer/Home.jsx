@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { withBoard } from "../../store/contexts/withBoard";
+import { withBoard } from "../../../store/contexts/withBoard";
 import { Link } from "react-router-dom";
-import NewBoard from "./NewBoard/NewBoard";
+import NewBoard from "../NewBoard/NewBoard";
 import { HomeWrapper, Boards, BoardBox } from "./styled";
-import FormInput from "../../components/Inputs/FormInput";
-import Button from "../../components/buttons/BlueLink";
+import FormInput from "../../../components/Inputs/FormInput";
+import Button from "../../../components/buttons/BlueLink";
 import styled from "styled-components";
 
 const Home = withBoard(({state, actions}) =>{

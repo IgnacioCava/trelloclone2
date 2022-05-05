@@ -1,4 +1,4 @@
-import { InputWrapper, Label, Input, Error, Editable, Text, Icon, ToolTip } from "./styled"
+import { InputWrapper, Label, Input, Error, Editable, Text, Icon, Wrap } from "./styled"
 import { useEffect, useState } from "react"
 import editIcon from "../../assets/editIcon.png"
 
@@ -34,22 +34,28 @@ export default function EditableInput({type, name, placeholder, value, onChange,
         }
     }
 
+    const handleClick = (e)=> {
+        setText(text.trim())
+        onChange(text.trim())
+        setEdit(false)
+    }
+
     return (
         <Editable>
             {edit?
             <InputWrapper >
                 <Label htmlFor={name}>{label}</Label>
-                <Input {...inputProps} value={text} onKeyDown={handleBlur} onChange={handleInput} length={text.length}/>
+                <Wrap>
+                    <Input {...inputProps} value={text} onKeyDown={handleBlur} onChange={handleInput} length={text.length}/>
+                    <Icon src={editIcon} onClick={handleClick}/>
+                </Wrap>
                 <Error>{error}</Error>
             </InputWrapper>
             :
             <Text onClick={()=>setEdit(true)}>
                 <h3>{text}</h3>
-                <Icon src={editIcon} alt='edit'/>
-                <ToolTip>Edit</ToolTip>
             </Text>}
         </Editable>
     )
 }
-
 

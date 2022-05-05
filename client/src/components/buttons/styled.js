@@ -33,22 +33,18 @@ export const AuthAction = styled.div`
     }
 `
 
-export const CloseButton = styled.button`
-    width: 40px;
-    height: 40px;
-    border: 1px solid #ff0707;
-    border-radius: 10px;
+export const CloseButton = styled.img`
+    width: 30px;
+    height: 100%;
+    border-radius: 4px;
     box-sizing: border-box;
-    outline: none;
-    background: #ff0033;
-    color: #fff;
-    cursor: pointer;
+    padding: 7px;
+    object-fit: cover;
     font-weight: bold;
     font-size: 20px;
     transition: .2s;
-    &:hover{
-        background: #fff;
-        color: #ff0033;
-        border-width: 3px;
+    cursor: pointer;
+    :hover{
+        background-color: #00000029;
     }
 `

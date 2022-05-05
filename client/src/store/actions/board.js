@@ -1,4 +1,4 @@
-import { GET_BOARD, GET_BOARDS, CREATE_BOARD, BOARD_ERROR, CLEAR, RENAME_BOARD, ADD_LIST, DELETE_LIST, RENAME_LIST } from '../actions'
+import { GET_BOARD, GET_BOARDS, CREATE_BOARD, BOARD_ERROR, CLEAR, RENAME_BOARD, ADD_LIST, DELETE_LIST, RENAME_LIST, ADD_CARD, DELETE_CARD, RENAME_CARD } from '../actions'
 import axios from 'axios'
 
 const config = {
@@ -20,7 +20,6 @@ export const getBoards = () => async dispatch => {
 }
 
 export const clear = () => dispatch => act(dispatch, CLEAR)
-
 
 export const getBoard = id => async dispatch => {
     try {
@@ -78,6 +77,36 @@ export const renameList = (id, title) => async dispatch => {
         act(dispatch, RENAME_LIST, {id, title})
         const body = JSON.stringify({title})
         await axios.patch(`/api/lists/rename/${id}`, body, config)
+    } catch (err) {
+        act(dispatch, BOARD_ERROR, err.response.data.message)
+    }
+}
+
+export const addCard = (listId, title) => async dispatch => {
+    try {
+        act(dispatch, ADD_CARD, {listId, card:{title}})
+        const body = JSON.stringify({listId, title})
+        const res = await axios.post(`/api/cards`, body, config)
+        act(dispatch, ADD_CARD, res.data)
+    } catch (err) {
+        act(dispatch, BOARD_ERROR, err.response.data.message)
+    }
+}
+
+export const deleteCard = (listId, cardId) => async dispatch => {
+    try {
+        act(dispatch, DELETE_CARD, {listId, cardId})
+        await axios.delete(`/api/cards/${listId}/${cardId}`, config)
+    } catch (err) {
+        act(dispatch, BOARD_ERROR, err.response.data.message)
+    }
+}
+
+export const renameCard = (listId, cardId, title) => async dispatch => {
+    try {
+        act(dispatch, RENAME_CARD, {listId, cardId, title})
+        const body = JSON.stringify({title})
+        await axios.patch(`/api/cards/edit/${cardId}`, body, config)
     } catch (err) {
         act(dispatch, BOARD_ERROR, err.response.data.message)
     }
