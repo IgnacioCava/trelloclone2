@@ -10,7 +10,7 @@ require('dotenv').config();
 const User = require('../../models/User');
 
 // Get users with email regex
-router.get('/:input', auth, async (req, res) => {
+router.get('/email/:input', auth, async (req, res) => {
   try {
     const email = new RegExp(req.params.input, 'i');
     const users = await User.find({email}).select('-password');
@@ -20,5 +20,13 @@ router.get('/:input', auth, async (req, res) => {
     res.status(500).send(err.message);
   }
 });
+
+router.get('/token', auth, async (req, res) => {
+  try {
+    res.json(req.user);
+  } catch (err) {
+    res.status(401).json({ msg: 'Token is not valid' });
+  }
+})
 
 module.exports = router;

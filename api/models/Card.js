@@ -8,9 +8,15 @@ const CardSchema = new Schema({
   description: {
     type: String,
   },
-  label: {
-    type: String,
-  },
+  label:{
+    color: {
+      type: String,
+    },
+    text: {
+      type: String,
+    }
+  }
+  ,
   members: [
     {
       _id: false,
@@ -18,7 +24,7 @@ const CardSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users',
       },
-      name: {
+      username: {
         type: String,
         required: true,
       },
