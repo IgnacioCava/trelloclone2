@@ -2,11 +2,12 @@ import { useState, useRef } from "react"
 import plus from "../../../../assets/plus.png"
 import cross from "../../../../assets/cross.png"
 import Button from "../../../../components/buttons/BlueLink"
-import {ListInput, Exit, Options, CreateListWrapper, PlusIcon, NewListText, Clickable, ListForm,} from "./styled"
+import {ElementInput, Exit, Options, CreateElementWrapper, PlusIcon, NewElementText, Clickable, ElementForm, ElementArea, Text} from "./styled"
+import adjustHeightToContent from "../../../../helpers/adjustHeight"
 
-const CreateElement = ({create, name}) => {
+const CreateElement = ({create, name, area, startingValue}) => {
 
-    const [elementTitle, setTitle] = useState('')
+    const [elementTitle, setTitle] = useState(startingValue||'')
     const [addElement, setAdd] = useState(false)
     const input = useRef(null)
 
@@ -16,34 +17,36 @@ const CreateElement = ({create, name}) => {
         e.preventDefault()
         if(elementTitle) {
             create(elementTitle)
-            setTitle('')
+            if(!area) setTitle('')
             setAdd(false)
         }
     }
 
     return (
-        <CreateListWrapper add={addElement} onClick={()=>!addElement?setAdd(true):null}>
+        <CreateElementWrapper add={addElement} onClick={()=>!addElement?setAdd(true):null}>
             {addElement ? 
-                <ListForm onSubmit={handleSubmit}>
-                    <ListInput ref={input} type='text' placeholder={`${name.charAt(0).toUpperCase()+name.substring(1)} title`} value={elementTitle} onChange={handleChange}/>
+                <ElementForm onSubmit={handleSubmit}>
+                    {area?
+                    <ElementArea ref={input} type='text' placeholder={`${name.charAt(0).toUpperCase()+name.substring(1)}`} value={elementTitle} onMouseEnter={adjustHeightToContent} onChange={(e)=>{handleChange(e); adjustHeightToContent(e)}}/>
+                    :<ElementInput ref={input} type='text' placeholder={`${name.charAt(0).toUpperCase()+name.substring(1)}`} value={elementTitle} onChange={handleChange}/>
+                    }
                     <Options>
                         <Button type='button'>
                             Add {name}
                         </Button>
                         <Exit src={cross} alt='cross' onClick={()=>setAdd(false)}/>
                     </Options>
-                </ListForm>
+                </ElementForm>
             : 
                 <Clickable onClick={()=>setAdd(true)}>
                     <PlusIcon src={plus} alt='plus'/>
-                    <NewListText>Add new {name}</NewListText>
+                    {area?
+                    <Text>{elementTitle}</Text>
+                    :<NewElementText>Add new {name.split(' ')[0]}</NewElementText>}
                 </Clickable>
             }
-        </CreateListWrapper>
+        </CreateElementWrapper>
     )
 }
-
-
-
 
 export default CreateElement

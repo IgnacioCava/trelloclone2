@@ -22,15 +22,18 @@ const Home = withBoard(({state, actions}) =>{
     return (
         <HomeWrapper>
             <h1>Boards</h1>
+
             <Line>
-            <FormInput placeholder="Search by title" name='title' values={{form}} onChange={handleChange}/>
-            <Button onClick={()=>setOpen(true)}>New Board</Button>
+                <FormInput placeholder="Search by title" name='title' values={{form}} onChange={handleChange}/>
+                <Button onClick={()=>setOpen(true)}>New Board</Button>
             </Line>
+
             <Boards>
                 {state.boards.filter(e=>e.title.includes(form.title)).map((board, i)=>
                     <BoardBox key={i} width={24}><Link to={`/board/${board._id}`}><h1>{board.title}</h1></Link></BoardBox>
                 )}
             </Boards>
+            
             {open?<NewBoard close={()=>setOpen(false)} create={(e)=>createBoard(e)}/>:null}
         </HomeWrapper>
     );
@@ -44,6 +47,9 @@ const Line = styled.div`
     margin-bottom: 1rem;
     width: 50%;
     min-width: 350px;
+    *{
+        width: 100%;
+    }
 `
 
 export default Home;

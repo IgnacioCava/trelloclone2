@@ -1,10 +1,11 @@
-import { GET_BOARD, GET_BOARDS, CREATE_BOARD, BOARD_ERROR, CLEAR, RENAME_BOARD, ADD_LIST, DELETE_LIST, RENAME_LIST, ADD_CARD, DELETE_CARD, RENAME_CARD } from '../actions'
+import { GET_BOARD, GET_BOARDS, CREATE_BOARD, BOARD_ERROR, CLEAR, RENAME_BOARD, ADD_LIST, DELETE_LIST, RENAME_LIST, ADD_CARD, DELETE_CARD, EDIT_CARD, GET_USER, TOGGLE_CARD_MEMBER, SET_LABEL } from '../actions'
 
 export const boardState = {
     boards: [],
     thisBoard: {
         allCards: []
     },
+    user: {},
     error: null
 }
 
@@ -46,7 +47,7 @@ export const boardReducer = (state, action) => {
                 ...state,
                 thisBoard: {
                     ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.filter(list=>list._id!==state.thisBoard.lists.length-1), {...payload, _id: payload._id||state.thisBoard.lists.length, cards:[], archived: false }],
+                    lists: [...state.thisBoard.lists.filter(list=>list._id!==state.thisBoard.lists.length-1), {...payload, _id: payload._id||state.thisBoard.lists.length, cards:[], archived: false}],
                     allCards: [...state.thisBoard.allCards]
                 }
             }
@@ -73,10 +74,7 @@ export const boardReducer = (state, action) => {
                 thisBoard: {
                     ...state.thisBoard,
                     lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        {
-                            ...list, 
-                            cards: [...list.cards.filter(card=>card._id!==list.cards.length-1), {...payload.card, archived:false, checklist:[], members:[], _id:payload.card._id||list.cards.length }]
-                        } 
+                        { ...list, cards: [...list.cards.filter(card=>card._id!==list.cards.length-1), {...payload.card, archived:false, checklist:[], _id:payload.card._id||list.cards.length }]} 
                         : list
                     )],
                     allCards: [
@@ -97,19 +95,39 @@ export const boardReducer = (state, action) => {
                     allCards: [...state.thisBoard.allCards.filter(e=>e._id!==payload.cardId)]
                 }
             }
-        case RENAME_CARD:
+        case EDIT_CARD:
             return {
                 ...state,
                 thisBoard: {
                     ...state.thisBoard,
                     lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        {
-                            ...list,
-                            cards: [...list.cards.map(card=>card._id===payload.cardId? {...card, title: payload.title} : card)]
-                        }
+                        { ...list, cards: [...list.cards.map(card=>card._id===payload.cardId? {...card, ...payload.card} : card)] }
                         : list
                         )],
-                    allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId? {...card, title: payload.title} : card)]
+                    allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId? {...card, ...payload.card} : card)]
+                }
+            }
+        case GET_USER:
+            return {
+                ...state,
+                user: payload
+            }
+        case TOGGLE_CARD_MEMBER:
+            return {
+                ...state,
+                thisBoard: {
+                    ...state.thisBoard,
+                    lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
+                        { ...list, cards: [...list.cards.map(card=>card._id===payload.cardId? 
+                            {...card, 
+                                members: card.members.findIndex(member=>member.user===payload.user.user)>-1?
+                                card.members.filter(member=>member.user!==payload.user.user)
+                                :[...card.members, payload.user]
+                            } : card)]} : list)],
+                    allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId? 
+                        {...card, members: card.members.filter(member=>member.user!==payload.userId)}
+                        : card
+                    )]
                 }
             }
         default:
