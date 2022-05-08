@@ -71,10 +71,10 @@ router.patch('/edit/:id', [auth, member], async (req, res) => {
   try {
     const { title, description, label } = req.body;
 
-    if (title === '') throw new Error({ message: 'Title is required', status: 400 });
+    if (title === '') throw { message: 'Title is required', status: 400 }
 
     const card = await Card.findById(req.params.id);
-    if (!card) throw new Error({ message: 'Card not found', status: 404 });
+    if (!card) throw { message: 'Card not found', status: 404 }
 
     card.title = title ? title : card.title;
 

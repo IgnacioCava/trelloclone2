@@ -30,15 +30,25 @@ const CardSchema = new Schema({
       },
     },
   ],
-  checklist: [
+  checklists: [
     {
-      text: {
+      title : {
         type: String,
+        required: true,
       },
-      complete: {
-        type: Boolean,
-      },
-    },
+      items: [
+        {
+          text: {
+            type: String,
+            required: true,
+          },
+          completed: {
+            type: Boolean,
+            default: false,
+          },
+        },
+      ],
+    }
   ],
   archived: {
     type: Boolean,
