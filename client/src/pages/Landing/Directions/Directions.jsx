@@ -10,7 +10,6 @@ export default function Main(){
                 <Link to='login' text='Log In'/>
                 <Link to='register' text='Sign Up'/>
             </Actions>
-            
         </MainWrapper>
     )
 }

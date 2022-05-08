@@ -1,11 +1,10 @@
 import { useState, useRef } from "react"
-import plus from "../../../../assets/plus.png"
-import cross from "../../../../assets/cross.png"
+import { plus, cross } from "../../../../assets"
 import Button from "../../../../components/buttons/BlueLink"
 import {ElementInput, Exit, Options, CreateElementWrapper, PlusIcon, NewElementText, Clickable, ElementForm, ElementArea, Text} from "./styled"
 import adjustHeightToContent from "../../../../helpers/adjustHeight"
 
-const CreateElement = ({create, name, area, startingValue}) => {
+const CreateElement = ({create, name, area, startingValue, required}) => {
 
     const [elementTitle, setTitle] = useState(startingValue||'')
     const [addElement, setAdd] = useState(false)
@@ -16,6 +15,11 @@ const CreateElement = ({create, name, area, startingValue}) => {
     const handleSubmit = (e) => {
         e.preventDefault()
         if(elementTitle) {
+            create(elementTitle)
+            if(!area) setTitle('')
+            setAdd(false)
+        }
+        else if(!required){
             create(elementTitle)
             if(!area) setTitle('')
             setAdd(false)

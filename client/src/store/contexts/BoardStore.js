@@ -21,6 +21,12 @@ export default function AuthStore(props) {
         editCard: (...e)=>actions.editCard(...e)(boardDispatch),
         getUser: ()=>actions.getUser()(boardDispatch),
         toggleCardMember: (...e)=>actions.toggleCardMember(...e)(boardDispatch),
+        addChecklist: (...e)=>actions.addChecklist(...e)(boardDispatch),
+        deleteChecklist: (...e)=>actions.deleteChecklist(...e)(boardDispatch),
+        renameChecklist: (...e)=>actions.renameChecklist(...e)(boardDispatch),
+        addChecklistItem: (...e)=>actions.addChecklistItem(...e)(boardDispatch),
+        deleteChecklistItem: (...e)=>actions.deleteChecklistItem(...e)(boardDispatch),
+        editChecklistItem: (...e)=>actions.editChecklistItem(...e)(boardDispatch),
     }
     
     const value = {board, dispatchedActions}

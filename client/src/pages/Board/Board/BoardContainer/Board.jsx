@@ -30,7 +30,9 @@ const Board = withBoard(({state, actions}) => {
                 {lists.map((list, i)=>{
                     return <List key={i} actions={actions} list={list} members={memberList} user={user}/>
                 })}
-                <CreateElement create={addList} name='list title'/>
+                <div>
+                    <CreateElement create={addList} name='list title'/>
+                </div>
             </Lists>
         </BoardWrapper>
     )

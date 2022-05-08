@@ -40,6 +40,8 @@ export const Options = styled.div`
 export const CreateElementWrapper = styled.div`
     display: flex;
     min-width: 272px;
+    width: 100%;
+    max-width: 100%;
     background-color:#00000029;
     background-color: ${props => props.add ? '#ebecf0':'#00000014' };
     padding: 4px;
