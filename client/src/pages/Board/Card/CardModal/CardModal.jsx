@@ -4,9 +4,10 @@ import CreateElement from "../.././Board/CreateElement/CreateElement";
 import ModalOption from "./Components/ModalOption/ModalOption";
 import { useRef, useState } from "react";
 import ChecklistComponent from "./Components/Checklist/Checklist";
-import Section from "./Components/Section/Section" 
+import Section from "./Components/Section/Section"
+import MemberIcon from "../../../../components/icons/MemberIcon";
 import {textIcon, checkIcon, plus, eyeIcon, userIcon, labelIcon, cardIcon} from '../../../../assets';
-import { ScrollArea, TopData, Label, Icons, Data, MemberIcon, ModalData, ModalOptions, ModalBody, From, FromList, Underline, Title, ModalContent, Modal} from "./styled";
+import { ScrollArea, TopData, Label, Icons, Data, ModalData, ModalOptions, ModalBody, From, FromList, Underline, Title, ModalContent, Modal} from "./styled";
 
 const CardModal = ({close, list, card, actions, members, user}) => {
 
@@ -17,7 +18,6 @@ const CardModal = ({close, list, card, actions, members, user}) => {
 
     const handleToggleMembers = formData => toggleCardMember(formData, card._id, list._id)
     const handleEditCard = formData => editCard(formData, card._id, list._id)
-
     const handleAddChecklist = formData => addChecklist(formData, card._id, list._id)
 
     return (
@@ -46,7 +46,7 @@ const CardModal = ({close, list, card, actions, members, user}) => {
                                 <h5>Members</h5>
                                 <Icons>
                                     {members.map((member, i) => card.members.findIndex(e=>e.user===member.user)>-1?
-                                        <MemberIcon key={i} color={member.color} title={member.username}> {member.username.charAt(0)} </MemberIcon>
+                                        <MemberIcon key={i} member={member}/>
                                         :null
                                     )}
                                     <img src={plus} alt='plus' onClick={()=>setOpen(!isOpen)}/>
@@ -55,12 +55,12 @@ const CardModal = ({close, list, card, actions, members, user}) => {
                                         {isOpen?<ModalOption type='Members' icon={userIcon} list={list} card={card} members={members} onClick={handleToggleMembers} open={true} outerOpen={setOpen}/>:null}
                                     </div>
                             </Data>
-                            <Data>
+                            {card.label&&Object.values(card.label).filter(e=>e).length?<Data>
                                 <h5>Label</h5>
                                 <Label color={card.label?.color}>
                                     {card.label?.text}
                                 </Label>
-                            </Data>
+                            </Data>:null}
                         </TopData>
 
                         <ScrollArea>
@@ -72,7 +72,7 @@ const CardModal = ({close, list, card, actions, members, user}) => {
                                 {card.checklists.map((checklist, i) => 
                                     <ChecklistComponent key={i} listId={list._id} cardId={card._id} checklist={checklist} actions={actions}/>
                                 )}
-                                <CreateElement create={(title)=>handleAddChecklist(title)} name='checklist'/>
+                                <CreateElement create={(title)=>handleAddChecklist(title)} name='checklist' required/>
                             </Section>
                         </ScrollArea>
                     </ModalData>

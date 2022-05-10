@@ -17,6 +17,9 @@ export const Color = styled.div`
     width: 25px;
     height: 25px;
     border-radius: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `
 
 
@@ -140,16 +143,5 @@ export const ChoiceModal = styled.div`
         :focus {
             border: 1px solid #2a73e2;
         }
-    }
-`
-
-export const MemberIcon = styled.span`
-    height: 32px;
-    width: 32px;
-    line-height: 32px;
-    border-radius: 50%;
-    background-color: ${props=>props.color};
-    :hover{
-        filter: brightness(1.05);
     }
 `

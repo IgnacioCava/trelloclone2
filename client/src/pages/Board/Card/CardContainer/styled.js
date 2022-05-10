@@ -26,9 +26,11 @@ export const Label = styled.div`
     background-color: ${props=>props.color};
     width: fit-content;
     height: 50%;
+    min-height: 20px;
+    min-width: 30px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     font-size: 13px;
     line-height: 26px;
     font-weight: 500;
@@ -69,6 +71,7 @@ export const MemberIcons = styled.div`
     justify-content: flex-end;
     align-items: center;
     width: 100%;
+    gap: 3px;
 `
 
 

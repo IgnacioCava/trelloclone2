@@ -42,14 +42,13 @@ export const CreateElementWrapper = styled.div`
     min-width: 272px;
     width: 100%;
     max-width: 100%;
-    background-color:#00000029;
-    background-color: ${props => props.add ? '#ebecf0':'#00000014' };
+    background-color: ${props => props.add ? '#ebecf0':'#dbdbdb' };
     padding: 4px;
     box-sizing: border-box;
     font-size:14px;
     border-radius:3px;
     :hover{
-        background-color: ${props => props.add ? '#ebecf0':'#00000029' };
+        background-color: ${props => props.add ? '#ebecf0':'white' };
     }
 `
 

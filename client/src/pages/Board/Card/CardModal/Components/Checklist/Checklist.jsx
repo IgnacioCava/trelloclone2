@@ -3,6 +3,7 @@ import EditableInput from '../../../../../../components/Inputs/EditableInput'
 import CreateElement from '../../../../Board/CreateElement/CreateElement'
 import { Progress, Max, Current, Title, ChecklistItem, Checklist } from './styled'
 import { useMemo } from 'react'
+import ExtendableOptions from '../../../../../../components/buttons/ExtendableOptions'
 
 const ChecklistComponent = ({listId, cardId, actions, checklist}) => {
 
@@ -20,25 +21,27 @@ const ChecklistComponent = ({listId, cardId, actions, checklist}) => {
     return (
         <Checklist>
             <Title>
-                <Close onClick={()=>handleDeleteChecklist(checklist._id)}/>
+                <ExtendableOptions erase={()=>handleDeleteChecklist(checklist._id)} elementName={'checklist'}/>
                 <EditableInput value={checklist.title} name='title' onChange={(title)=>handleRenameChecklist(title)}/>
             </Title>
 
+            {checklist.items.length?
             <Progress>
                 <span>{Math.round(completedItems/checklist.items.length*100)}%</span>
                 <Max>
                     <Current status={completedItems/checklist.items.length*100}/>
                 </Max>
-            </Progress>
+            </Progress>:null}
+            
 
-            {checklist.items.map(item=>
-                <ChecklistItem status={completedItems===checklist.items.length} checked={item.completed}>
-                    <input type='checkbox' checked={item.completed} onClick={()=>handleEditChecklistItem({completed: !item.completed}, item._id)}/>
+            {checklist.items.map((item, i)=>
+                <ChecklistItem key={i} status={completedItems===checklist.items.length} checked={item.completed}>
+                    <input type='checkbox' checked={item.completed} onChange={()=>handleEditChecklistItem({completed: !item.completed}, item._id)}/>
                     <EditableInput value={item.text} name='text' onChange={(text)=>handleEditChecklistItem({text}, item._id)}/>
-                    <Close onClick={()=>handleDeleteChecklistItem(item._id)}/>
+                    <ExtendableOptions erase={()=>handleDeleteChecklistItem(item._id)} elementName={'checklist item'}/>
                 </ChecklistItem>
             )}
-            <CreateElement create={(text)=>handleAddChecklistItem(text, checklist._id)} name='item'/>
+            <CreateElement create={(text)=>handleAddChecklistItem(text, checklist._id)} name='item' required/>
         </Checklist>
     )
 }

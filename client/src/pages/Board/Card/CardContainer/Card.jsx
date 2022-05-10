@@ -1,12 +1,13 @@
 import { useState, useRef, useMemo } from 'react';
-import Close from '../../../../components/buttons/Close';
 import CardTitle from '../CardTitle/CardTitle';
 import CardModal from '../CardModal/CardModal';
 import { textIcon, eyeIcon, checkIconWhite, checkIcon } from '../../../../assets';
-import { Completed, WithLabel, Label, MemberIcon, CardIcons, MemberIcons, Body, Title, CardHolder} from './styled'
+import { Completed, WithLabel, Label, CardIcons, MemberIcons, Body, Title, CardHolder} from './styled'
+import MemberIcon from '../../../../components/icons/MemberIcon';
+import ExtendableOptions from '../../../../components/buttons/ExtendableOptions';
 
 const Card = ({card, list, actions, members, user}) => {
-    const { deleteCard, editCard } = actions;
+    const { deleteCard, editCard, toggleCardStatus } = actions;
 
     const [openModal, setOpen] = useState(false);
     const modal = useRef(null);
@@ -15,14 +16,14 @@ const Card = ({card, list, actions, members, user}) => {
     const allItems = useMemo(()=>card.checklists.map(e=>e.items).flat().length, [card.checklists]);
 
     return (
-        <CardHolder >
-            <Title ref={modal} onClick={(e)=>e.target===modal.current?setOpen(true):null}>
+        <CardHolder ref={modal} onClick={(e)=>e.target===modal.current?setOpen(true):null}>
+            <Title>
                 <WithLabel>
                     {card.label?.color||card.label?.text?
                     <Label onClick={()=>setOpen(true)} color={card.label?.color}>{card.label?.text}</Label>:null}
                     <CardTitle title={card.title} rename={(title)=>editCard({title}, card._id, list._id)}/>
                 </WithLabel>
-                <Close onClick={()=>deleteCard(list._id, card._id)}/>
+                <ExtendableOptions archive={()=>toggleCardStatus(list._id, card._id)} erase={()=>deleteCard(list._id, card._id)} elementName={'card'}/>
             </Title>
 
             <Body onClick={()=>setOpen(true)}>
@@ -41,7 +42,7 @@ const Card = ({card, list, actions, members, user}) => {
                 </CardIcons>
                 <MemberIcons>
                     {members.map((member, i)=> card.members.findIndex(e=>e.user===member.user)>-1?
-                    <MemberIcon key={i} color={member.color} title={member.username}> {member.username.charAt(0)} </MemberIcon>:null)}
+                    <MemberIcon key={i} member={member} diameter={28}/>:null)}
                 </MemberIcons>
             </Body>
             {openModal?<CardModal card={card} list={list} close={()=>setOpen(false)} actions={actions} members={members} user={user}/>:null}
