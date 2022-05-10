@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const member = require('../../middleware/member');
 const { check, validationResult } = require('express-validator');
+const ObjectId = require('mongodb').ObjectId;
 
 const User = require('../../models/User');
 const Board = require('../../models/Board');
@@ -17,7 +18,7 @@ router.post('/', [auth, [check('title', 'Title is required').not().isEmpty()]],
       const { title, backgroundURL } = req.body;
 
       // Create and save the board
-      const newBoard = new Board({ title, backgroundURL });
+      const newBoard = new Board({ title, backgroundURL: backgroundURL || 'https://wallpaperaccess.com/full/2866863.jpg' });
       const board = await newBoard.save();
 
       // Add board to user's boards
@@ -32,7 +33,7 @@ router.post('/', [auth, [check('title', 'Title is required').not().isEmpty()]],
       board.activity.unshift({ text: `${user.username} created this board` });
       await board.save();
 
-      res.json({title: board.title, id: board._id});
+      res.json({title: board.title, _id: board._id});
     } catch (err) {
       res.status(500).send(err.message);
     }
@@ -69,7 +70,7 @@ router.get('/:id', auth, async (req, res) => {
 // Get a board's activity
 router.get('/activity/:boardId', auth, async (req, res) => {
   try {
-    const board = await Board.findById(req.params.boardId).select('activity');
+    const board = await Board.findById(req.header('boardId')).select('activity');
     if (!board) return res.status(404).json({ msg: 'Board not found' });
 
     res.json(board.activity);
@@ -93,7 +94,7 @@ router.patch('/rename/:id', [auth, member],
         const user = await User.findById(req.user.id);
         if(!user) throw {message: 'User not found', status: 404}
         board.activity.unshift({
-          text: `${user.name} renamed this board (from '${board.title}')`,
+          text: `${user.username} renamed this board (from '${board.title}')`,
         });
       }
       
@@ -107,27 +108,70 @@ router.patch('/rename/:id', [auth, member],
   }
 );
 
-// Add a board member
-router.put('/addMember/:userId', [auth, member], async (req, res) => {
+// Change a board's background
+router.patch('/background/:id', [auth, member],
+  async (req, res) => {
+    
+    try {
+      const { backgroundURL } = req.body;
+      if(!backgroundURL) throw {message: 'Background url is required', status: 400}
+      const board = await Board.findById(req.params.id).select('backgroundURL activity');
+      if (!board) throw {message: 'Board not found', status: 404}
+      
+      // Log activity
+      if (backgroundURL !== board.backgroundURL) {
+        const user = await User.findById(req.user.id);
+        if(!user) throw {message: 'User not found', status: 404}
+        board.activity.unshift({
+          text: `${user.username} changed this board's background`,
+        });
+      }
+      
+      board.backgroundURL = backgroundURL;
+      res.send("Board's background successfully changed");
+      await board.save();
+      
+    } catch (err) {
+      res.status(err.status||500).send(err.message);
+    }
+  }
+);
+
+// Add or remove a board member
+router.put('/members/:action/:userId', [auth, member], async (req, res) => {
   try {
+    const { action, userId } = req.params;
+
+    if(!ObjectId.isValid(req.header('boardId'))) throw {message: 'Invalid board Id', status: 400}
+    if(!ObjectId.isValid(userId)) throw {message: 'Invalid user Id', status: 400}
+
+    if(!action || !userId) throw {message: 'User Id and action are required', status: 400}
+    if(action !== 'add' && action !== 'remove') throw {message: 'Action must be add or remove', status: 400}
+  
     const board = await Board.findById(req.header('boardId')).select('members activity');
-    const user = await User.findById(req.params.userId);
+    if (!board) throw {message: 'Board not found', status: 404}
+
+    const user = await User.findById(userId);
     if (!user) throw {message: 'User not found', status: 404}
 
-    // See if user is already a member of board. This method is 30% faster
-    if(board.members.find(member => member.user === req.params.userId)){
-      throw {message: 'User already member of board', status: 400}
+    const member = board.members.find(member => member.user.toString() === userId)
+
+    if((action==='add' && member) || (action==='remove' && !member)){
+      throw {message: `User is ${member? 'already' : 'not'} a member of board`, status: 400}
     }
 
-    // Add board to user's boards
-    user.boards.unshift(board.id);
-    await user.save();
-
-    // Add user to board's members with 'normal' role
-    board.members.push({ user: user.id, name: user.name, role: 'normal' });
+    // Add or remove user from board's members
+    if (action === 'add') {
+      board.members.push({ user: user._id, username: user.username, role: 'normal' });
+      user.boards.unshift(board.id);
+    } else {
+      board.members = board.members.filter(member => member.user.toString() !== userId);
+      user.boards = user.boards.filter(board => board !== board.id);
+    }
 
     // Log activity
-    board.activity.unshift({ text: `${user.name} joined this board`,});
+    board.activity.unshift({ text: `${user.username} ${action==='add'? 'joined' : 'left'} this board`,});
+    await user.save();
     await board.save();
 
     res.json(board.members);

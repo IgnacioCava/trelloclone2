@@ -20,20 +20,20 @@ router.post('/', [auth, member, [check('title', 'Title is required').not().isEmp
       const boardId = req.header('boardId');
 
       // Create and save the card
-      const user = await User.findById(req.user.id);
-      const newCard = new Card({ title, members: [{ user: user.id, username: user.username }]});
-      const card = await newCard.save();
-      res.json({ card, listId });
-
+      
       // Assign the card to the list
       const list = await List.findById(listId);
+      const user = await User.findById(req.user.id);
+      const newCard = new Card({ title, members: [{ user: user.id, username: user.username }], from:{ _id: listId, title: list.title }});
+      const card = await newCard.save();
+      res.json({ card, listId });
       list.cards.push(card.id);
       await list.save();
 
       // Log activity
       const board = await Board.findById(boardId);
       board.activity.unshift({
-        text: `${user.name} added '${title}' to '${list.title}'`,
+        text: `${user.username} added '${title}' to '${list.title}'`,
       });
       await board.save();
 
@@ -90,13 +90,13 @@ router.patch('/edit/:id', [auth, member], async (req, res) => {
 });
 
 // Archive/Unarchive a card
-router.patch('/archive/:archive/:id', [auth, member], async (req, res) => {
+router.patch('/archive/:id', [auth, member], async (req, res) => {
   try {
     const card = await Card.findById(req.params.id).select('archived title');
     if (!card) return res.status(404).json({ msg: 'Card not found' });
 
-    card.archived = req.params.archive === 'true';
-    res.json(card);
+    card.archived = !card.archived;
+    res.send(`Card ${card.archived?'archived':'restored'} successfully`);
     await card.save();
     
 
@@ -105,8 +105,8 @@ router.patch('/archive/:archive/:id', [auth, member], async (req, res) => {
     const board = await Board.findById(req.header('boardId')).select('activity');
     board.activity.unshift({
       text: card.archived
-      ? `${user.name} archived card '${card.title}'`
-      : `${user.name} sent card '${card.title}' to the board`,
+      ? `${user.username} archived card '${card.title}'`
+      : `${user.username} sent card '${card.title}' to the board`,
     });
     await board.save();
 
@@ -148,7 +148,7 @@ router.patch('/move/:id', [auth, member], async (req, res) => {
       const user = await User.findById(req.user.id);
       const board = await Board.findById(boardId);
       const card = await Card.findById(cardId);
-      board.activity.unshift({ text: `${user.name} moved '${card.title}' from '${from.title}' to '${to.title}'`});
+      board.activity.unshift({ text: `${user.username} moved '${card.title}' from '${from.title}' to '${to.title}'`});
       await board.save();
     }
 
@@ -167,17 +167,17 @@ router.put('/togglemember/:userId/:cardId', [auth, member], async (req, res) => 
 
     const members = card.members.map((member) => member.user);
     const index = members.indexOf(userId);
-    res.json(`${user.username} ${index===-1 ? 'joined' : 'left'} '${card.title}'`);
-
+    
     index!==-1 ? card.members.splice(index, 1) : card.members.push({ user: user.id, username: user.username });
     
     await card.save();
 
     // Log activity
     const board = await Board.findById(req.header('boardId'));
-    board.activity.unshift({ text: `${user.username} ${index===-1 ? 'joined' : 'left'} '${card.title}'`});
+    board.activity.unshift({ text: `${user.username} ${index===-1 ? 'left' : 'joined'} '${card.title}'`});
     await board.save();
-
+    
+    res.json(`${user.username} ${index===-1 ? 'left' : 'joined'} '${card.title}'`);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -198,7 +198,7 @@ router.delete('/:listId/:id', [auth, member], async (req, res) => {
     // Log activity
     const user = await User.findById(req.user.id);
     const board = await Board.findById(req.header('boardId'));
-    board.activity.unshift({ text: `${user.name} deleted '${card.title}' from '${list.title}'` });
+    board.activity.unshift({ text: `${user.username} deleted '${card.title}' from '${list.title}'` });
     await board.save();
 
   } catch (err) {

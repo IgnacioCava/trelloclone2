@@ -55,6 +55,17 @@ const CardSchema = new Schema({
     required: true,
     default: false,
   },
+  from:{
+    _id: {
+      type: Schema.Types.ObjectId,
+      ref: 'lists',
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+  }
 });
 
 module.exports = Card = model('cards', CardSchema);
