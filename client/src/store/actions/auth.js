@@ -55,9 +55,8 @@ export const loadUser = () => async (dispatch) => {
     }
 }
 
-export const logout = (redirect) => dispatch => {
+export const logout = () => dispatch => {
     localStorage.removeItem('token')
-    redirect()
     dispatch({
         type: LOGOUT
     })
