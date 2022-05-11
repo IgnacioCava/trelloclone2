@@ -50,7 +50,7 @@ export const CloseButton = styled.img`
     }
 `
 
-const Text = styled.div`
+export const Text = styled.div`
     display: flex;
     flex-direction: column;
     font-size: 18px;
