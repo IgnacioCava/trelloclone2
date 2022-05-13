@@ -31,12 +31,12 @@ const Register = withAuth(({state, actions}) => {
         if(errorCount.length===4&&!errorCount.filter(e=>e).length) register(form, ()=>navigate('/home'))
     }
     return (
-            <Form onSubmit={handleSubmit}>
-                {inputs.map(input => <FormInput key={input.name} type='text' name={input.name} values={{form, errors}} label={input.label} onChange={handleChange}/> )}
+        <Form onSubmit={handleSubmit}>
+            {inputs.map(input => <FormInput key={input.name} type={input.name.includes('password')?'password':'text'} name={input.name} values={{form, errors}} label={input.label} onChange={handleChange}/> )}
 
-                <Button text='Sign up'/>
-                <Back>Or <Link to='/landing/login'>Log In</Link> to an existing account</Back>
-            </Form>
+            <Button>Sign up</Button>
+            <Back>Or <Link to='/landing/login'>Log In</Link> to an existing account</Back>
+        </Form>
     )
 })
 

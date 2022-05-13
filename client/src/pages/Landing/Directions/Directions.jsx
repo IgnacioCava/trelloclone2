@@ -7,8 +7,8 @@ export default function Main(){
             <h2>Welcome to Trello</h2>
 
             <Actions>
-                <Link to='login' text='Log In'/>
-                <Link to='register' text='Sign Up'/>
+                <Link to='login'>Log In</Link>
+                <Link to='register'>Sign Up</Link>
             </Actions>
             
         </MainWrapper>
