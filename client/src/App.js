@@ -15,6 +15,7 @@ export default function App() {
   return (
     <div className="App">
       <Routes>
+
         <Route path="*" element={<Navigate to={localStorage.token?'/home':'/'}/>}/>
         
         <Route path="/" element={<AuthStore><Landing/></AuthStore>}>

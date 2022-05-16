@@ -34,17 +34,17 @@ export const AuthAction = styled.div`
 `
 
 export const CloseButton = styled.img`
-    width: 30px;
-    height: 100%;
-    border-radius: 4px;
+    width: 30px !important;
+    border-radius: 4px !important;
     box-sizing: border-box;
     padding: 7px;
     object-fit: cover;
     font-weight: bold;
     font-size: 20px;
     transition: .2s;
+    background-color: transparent !important;
     cursor: pointer;
     :hover{
-        background-color: #00000029;
+        background-color: #00000029 !important;
     }
 `
