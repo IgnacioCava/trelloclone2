@@ -3,85 +3,165 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const member = require('../../middleware/member');
 const { check, validationResult } = require('express-validator');
+const ObjectId = require('mongodb').ObjectId;
 
 const Card = require('../../models/Card');
 
-// Add a checklist item
-router.post(
-  '/:cardId',
-  [auth, member, [check('text', 'Text is required').not().isEmpty()]],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
-    try {
-      const card = await Card.findById(req.params.cardId);
-      if (!card) return res.status(404).json({ msg: 'Card not found' });
-
-      card.checklist.push({ text: req.body.text, complete: false });
-      res.json(card);
-      await card.save();
-
-    } catch (err) {
-      
-      res.status(500).send(err.message);
-    }
-  }
-);
-
-// Edit a checklist's item's text
-router.patch(
-  '/:cardId/:itemId',
-  [auth, member, [check('text', 'Text is required').not().isEmpty()]],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
-    try {
-      const card = await Card.findById(req.params.cardId).select('checklist');
-      if (!card) throw new Error({ message: 'Card not found', status: 404 });
-      
-      res.json("Checklist item updated");
-      card.checklist.find((item) => item.id === req.params.itemId).text = req.body.text;
-      await card.save();
-
-    } catch (err) {
-      res.status(err.status).send(err.message);
-    }
-  }
-);
-
-// Complete/Uncomplete a checklist item
-router.patch('/:cardId/:complete/:itemId', [auth, member], async (req, res) => {
+// Add a checklist
+router.post('/:cardId', [auth, member], async (req, res) => {
   try {
-    const card = await Card.findById(req.params.cardId).select('checklist');
-    if (!card) return res.status(404).json({ msg: 'Card not found' });
+      const { title } = req.body;
+      const cardId = req.params.cardId;
 
-    res.send(`Item ${req.params.complete?"checked":"unchecked"}`);
-    card.checklist.find((item) => item.id === req.params.itemId).complete = (req.params.complete === 'true')
+      if(!title) throw {message: 'Title is required', status: 400}
+      if(!ObjectId.isValid(cardId)) throw {message: 'Invalid card Id', status: 400}
+
+      const card = await Card.findById(cardId);
+      if (!card) throw {message: 'Card not found', status: 404}
+
+      card.checklists.push({ title, items: [] });
+      res.json(card.checklists.slice(-1)[0].id);
+      await card.save();
+
+    } catch (err) {
+      console.log(err)
+      res.status(err.status||500).send(err.message);
+    }
+  }
+);
+
+// Edit a checklist
+router.patch('/:cardId/:checklistId', [auth, member], async (req, res) => {
+  try {
+      const { title } = req.body;
+      const { cardId, checklistId } = req.params;
+
+      if(!title) throw {message: 'Title is required', status: 400}
+      if(!cardId || !checklistId) throw {message: 'Missing card or checklist Id fields', status: 400}
+      if(!ObjectId.isValid(cardId) || !ObjectId.isValid(checklistId)) throw {message:'Invalid card or checklist Id', status: 400}
+
+      const card = await Card.findById(cardId);
+      if (!card) throw {message: 'Card not found', status: 404}
+
+      const checklist = card.checklists.find(e => e.id === checklistId).title=title;
+      if (!checklist) throw {message:'Checklist not found', status: 404};
+
+      console.log(checklist)
+      res.json(checklist);
+      await card.save();
+
+    } catch (err) {
+      console.log(err)
+      res.status(err.status||500).send(err.message);
+    }
+  }
+);
+
+// Delete a checklist
+router.delete('/:cardId/:checklistId', [auth, member], async (req, res) => {
+  try {
+    const { cardId, checklistId } = req.params;
+    
+    if(!cardId || !checklistId) throw {message: 'Missing card or checklist Id fields', status: 400}
+    if(!ObjectId.isValid(cardId) || !ObjectId.isValid(checklistId)) throw {message:'Invalid card or checklist Id', status: 400}
+
+    const card = await Card.findById(cardId);
+    if (!card) throw {message:'Card not found', status: 404};
+
+    const index = card.checklists.findIndex(checklist => checklist.id === checklistId);
+    if(index === -1) throw {message:'Checklist not found', status: 404};
+
+    const checklist = card.checklists[index];
+
+    card.checklists.splice(index, 1);
+
+    res.send(`Removed checklist '${checklist.title}'`);
     await card.save();
 
   } catch (err) {
-    res.status(500).send(err.message);
+    console.log(err)
+    res.status(err.status||500).send(err.message);
   }
 });
 
-// Delete a checklist item
-router.delete('/:cardId/:itemId', [auth, member], async (req, res) => {
+// Add an item to a checklist
+router.post('/item/:cardId/:checklistId', [auth, member], async (req, res) => {
   try {
-    const card = await Card.findById(req.params.cardId).select('checklist');
-    if (!card)  return res.status(404).json({ msg: 'Card not found' });
+    const { cardId, checklistId } = req.params;
+    const { text } = req.body;
+    
+    if(!cardId || !checklistId) throw {message: 'Missing card or checklist Id fields', status: 400}
+    if(!text) throw {message: 'Checklist item text is required', status: 400}
 
-    const index = card.checklist.findIndex((item) => item.id === req.params.itemId);
-    if(index !== -1) {
-      res.send("Item deleted");
-      card.checklist.splice(index, 1);
-      await card.save();
-    }
-    else return res.status(404).json({ msg: 'Item not found' });
+    const card = await Card.findById(cardId);
+    if (!card) throw {message: 'Card not found', status: 404}
+
+    const checklist = card.checklists.find(checklist => checklist.id === checklistId)
+    if (!checklist) throw {message: 'Checklist not found', status: 404}
+    checklist.items.push({ text, checked: false });
+
+    res.json(checklist);
+    await card.save();
 
   } catch (err) {
-    res.status(500).send(err.message);
+    console.log(err)
+    res.status(err.status||500).send(err.message);
+  }
+});
+
+// Edit a checklist's item
+router.patch('/item/:cardId/:checklistId/:itemId', [auth, member], async (req, res) => {
+  try {
+    const { cardId, checklistId, itemId } = req.params;
+    const { text, completed } = req.body;
+    console.log(completed)
+    if(!cardId || !checklistId || !itemId) throw {message: 'Missing Id fields', status: 400}
+    //if(!text) throw {message: 'Checklist item text is required', status: 400}
+    if(!ObjectId.isValid(cardId) || !ObjectId.isValid(checklistId) || !ObjectId.isValid(itemId)) throw {message:'Invalid Ids were sent', status: 400}
+
+    const card = await Card.findById(cardId).select('checklists');
+    if (!card) throw { message: 'Card not found', status: 404 }
+
+    const checklist = card.checklists.find(checklist => checklist.id === checklistId)
+    if (!checklist) throw {message: 'Checklist not found', status: 404}
+
+    const index = checklist.items.findIndex(item => item.id === itemId);
+    if (index === -1) throw {message: 'Checklist item not found', status: 404}
+
+    checklist.items[index] = {...checklist.items[index].toJSON(), text:text??checklist.items[index].text, completed:completed??checklist.items[index].completed};
+    res.json(checklist.items[index]);
+    await card.save()
+
+  } catch (err) {
+    res.status(err.status||500).send(err.message);
+  }
+}
+);
+
+// Delete an item from a checklist
+router.delete('/item/:cardId/:checklistId/:itemId', [auth, member], async (req, res) => {
+  try {
+    const { cardId, checklistId, itemId } = req.params;
+    
+    if(!cardId || !checklistId) throw {message: 'Missing card or checklist Id fields', status: 400}
+
+    const card = await Card.findById(cardId);
+    if (!card) throw {message: 'Card not found', status: 404}
+
+    const checklist = card.checklists.find(checklist => checklist.id === checklistId)
+    if (!checklist) throw {message: 'Checklist not found', status: 404}
+
+    const index = checklist.items.findIndex(item => item.id === itemId);
+    if (index === -1) throw {message: 'Checklist item not found', status: 404}
+    
+    checklist.items.splice(index, 1);
+
+    res.json({deleted: checklist});
+    await card.save();
+
+  } catch (err) {
+    console.log(err)
+    res.status(err.status||500).send(err.message);
   }
 });
 

@@ -1,0 +1,95 @@
+import Close from "../../../../components/buttons/Close";
+import CardTitle from "../CardTitle/CardTitle";
+import CreateElement from "../.././Board/CreateElement/CreateElement";
+import ModalOption from "./Components/ModalOption/ModalOption";
+import { useRef, useState } from "react";
+import ChecklistComponent from "./Components/Checklist/Checklist";
+import Section from "./Components/Section/Section" 
+import {textIcon, checkIcon, plus, eyeIcon, userIcon, labelIcon, cardIcon} from '../../../../assets';
+import { ScrollArea, TopData, Label, Icons, Data, MemberIcon, ModalData, ModalOptions, ModalBody, From, FromList, Underline, Title, ModalContent, Modal} from "./styled";
+
+const CardModal = ({close, list, card, actions, members, user}) => {
+
+    const { editCard, toggleCardMember, addChecklist } = actions;
+    const modal = useRef(null);
+
+    const [isOpen, setOpen] = useState(false);
+
+    const handleToggleMembers = formData => toggleCardMember(formData, card._id, list._id)
+    const handleEditCard = formData => editCard(formData, card._id, list._id)
+
+    const handleAddChecklist = formData => addChecklist(formData, card._id, list._id)
+
+    return (
+        <Modal ref={modal} onClick={(e)=>e.target===modal.current? close() : null}>
+            <ModalContent>
+                <Section icon={cardIcon}>
+                    <div style={{display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width:'100%'}}>
+                    <From>
+                        <Title>
+                            <CardTitle title={card.title} rename={(title)=>handleEditCard({title})}/>
+                        </Title>
+
+                        <FromList>
+                            from list <Underline>{list.title}</Underline> 
+                            {card.members.findIndex(e=>e.user===user.id)>-1?<img src={eyeIcon} alt='eye' title='You are a member of this card'/>:null}
+                        </FromList>
+                    </From>
+                    <Close onClick={close}/>
+                    </div>
+                </Section>
+
+                <ModalBody>
+                    <ModalData>
+                        <TopData>
+                            <Data>
+                                <h5>Members</h5>
+                                <Icons>
+                                    {members.map((member, i) => card.members.findIndex(e=>e.user===member.user)>-1?
+                                        <MemberIcon key={i} color={member.color} title={member.username}> {member.username.charAt(0)} </MemberIcon>
+                                        :null
+                                    )}
+                                    <img src={plus} alt='plus' onClick={()=>setOpen(!isOpen)}/>
+                                </Icons>
+                                    <div>
+                                        {isOpen?<ModalOption type='Members' icon={userIcon} list={list} card={card} members={members} onClick={handleToggleMembers} open={true} outerOpen={setOpen}/>:null}
+                                    </div>
+                            </Data>
+                            <Data>
+                                <h5>Label</h5>
+                                <Label color={card.label?.color}>
+                                    {card.label?.text}
+                                </Label>
+                            </Data>
+                        </TopData>
+
+                        <ScrollArea>
+                            <Section title='Description' icon={textIcon}>
+                                <CreateElement create={(name)=>handleEditCard({description:name})} name='description' area startingValue={card.description}/>
+                            </Section>
+
+                            <Section title='Checklists' icon={checkIcon}>
+                                {card.checklists.map((checklist, i) => 
+                                    <ChecklistComponent key={i} listId={list._id} cardId={card._id} checklist={checklist} actions={actions}/>
+                                )}
+                                <CreateElement create={(title)=>handleAddChecklist(title)} name='checklist'/>
+                            </Section>
+                        </ScrollArea>
+                    </ModalData>
+
+                    <ModalOptions>
+                        <span>Add to the card</span>
+                        <div>
+                            <ModalOption type='Members' icon={userIcon} list={list} card={card} members={members} onClick={handleToggleMembers}/>
+                            <ModalOption type='Checklist' icon={checkIcon} card={card} members={members} onClick={handleAddChecklist}/>
+                            <ModalOption type='Labels' icon={labelIcon} card={card} members={members} onClick={handleEditCard}/>
+                        </div>
+                    </ModalOptions>
+                </ModalBody>
+
+            </ModalContent>
+        </Modal>
+    )
+}
+
+export default CardModal;

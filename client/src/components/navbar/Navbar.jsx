@@ -18,7 +18,7 @@ const Navbar = withAuth(({state, actions}) => {
             <span>Welcome{ username? ', '+username : '...' }</span>
             <Buttons>
                 <button onClick={()=>navigate('/home')}>Home</button>
-                <LogOut onClick={logout}>Log Out</LogOut>
+                <LogOut onClick={()=>logout(navigate('/landing'))}>Log Out</LogOut>
             </Buttons>
         </NavBar>
     )
