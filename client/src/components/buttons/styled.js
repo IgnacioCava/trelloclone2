@@ -34,9 +34,6 @@ export const AuthAction = styled.div`
 `
 
 export const CloseButton = styled.button`
-    position: absolute;
-    top: 10px;
-    right: 10px;
     width: 40px;
     height: 40px;
     border: 1px solid #ff0707;

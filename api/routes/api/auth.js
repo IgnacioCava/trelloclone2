@@ -46,32 +46,32 @@ router.post('/register', async (req, res) => {
 // Login user & get token
 router.post( '/login', async (req, res) => {
 
-    const { email, password } = req.body;
+  const { email, password } = req.body;
+  if(!email || !password) return res.status(400).json({ error: `Missing fields: ${[email?'':'email', password?'':'password'].filter(e=>e).join(', ')}.` });
+  try {
+    // See if user exists
+    let user = await User.findOne({ email });
 
-    if(!email || !password) return res.status(400).json({ error: `Missing fields: ${[email?'':'email', password?'':'password'].filter(e=>e).join(', ')}.` });
-    try {
-      // See if user exists
-      let user = await User.findOne({ email });
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!user) return res.status(400).json({ error: 'Invalid credentials' })
+    if (!user) return res.status(400).json({ error: 'Invalid credentials' })
+    const isMatch = await bcrypt.compare(password, user.password);
 
-      // Check for email and password match
-      if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' })
+    // Check for email and password match
+    if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' })
 
-      // Return jsonwebtoken
-      jwt.sign(
-        { user: { id: user.id, } },
-        process.env.JWT_SECRET,
-        { expiresIn: 360000 },
-        (err, token) => {
-          if (err) throw err;
-          res.json({ token });
-        }
-      );
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send(err.message);
-    }
+    // Return jsonwebtoken
+    jwt.sign(
+      { user: { id: user.id, } },
+      process.env.JWT_SECRET,
+      { expiresIn: 360000 },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send(err.message);
+  }
   }
 );
 

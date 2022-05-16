@@ -50,19 +50,8 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// Get a board by id
-router.get('/:id', auth, async (req, res) => {
-  try {
-    const board = await Board.findById(req.params.id);
-    if (!board) return res.status(404).json({ msg: 'Board not found' });
-    res.json(board);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
-
 //Get a full board object by id
-router.get('/opt/:id', auth, async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
   try {
     const board = await Board.findById(req.params.id).populate({
       path: 'lists',
@@ -90,13 +79,12 @@ router.get('/activity/:boardId', auth, async (req, res) => {
 });
 
 // Change a board's title
-router.patch('/rename/:id', [auth, member, [check('title', 'Title is required').not().isEmpty()]],
+router.patch('/rename/:id', [auth, member],
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
+    
     try {
-      const board = await Board.findById(req.params.id).select('activity title');
+      if(!req.body.title) throw new Error({message: 'Title is required', status: 400});
+      const board = await Board.findById(req.params.id).select('title activity');
       if (!board) throw new Error({message: 'Board not found', status: 404});
       
       // Log activity
@@ -109,11 +97,11 @@ router.patch('/rename/:id', [auth, member, [check('title', 'Title is required').
       }
       
       board.title = req.body.title;
-      res.send("Board renamed successfully");
+      res.send("Board successfully renamed to "+board.title);
       await board.save();
       
     } catch (err) {
-      res.status(err.status).send(err.message);
+      res.status(err.status||500).send(err.message);
     }
   }
 );

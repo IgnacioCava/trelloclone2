@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { AuthAction } from './styled'
 
-export default function Button({to, children}){
+export default function Button({to, onClick, children}){
     return (
         <AuthAction>
             {
@@ -10,7 +10,7 @@ export default function Button({to, children}){
                     {children}
                 </Link>
                 :
-                <button type='submit'>
+                <button type='submit' onClick={onClick}>
                     {children}
                 </button>
             }
