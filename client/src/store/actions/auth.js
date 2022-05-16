@@ -12,7 +12,7 @@ export const register = (formData, redirect) => async dispatch => {
         const body = JSON.stringify(formData)
         const response = await axios.post('/auth/register', body, config )
         localStorage.setItem('token', response.data.token)
-        loadUser()(dispatch)
+        dispatch(loadUser())
         redirect()
     }
     catch(error){
