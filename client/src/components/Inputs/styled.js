@@ -67,6 +67,7 @@ export const Text = styled.div`
     justify-content: flex-start;
     cursor: pointer;
     font-size: 1.2rem;
+    background-color: #ffffff73;
     font-weight: 100;
     padding: 5px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;

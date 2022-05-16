@@ -31,12 +31,13 @@ export const TopData = styled.div`
 export const Label = styled.div`
     background-color: ${props=>props.color};
     width: 100%;
-    height: 40px;
+    height: 100%;
+    max-height: 37px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 16px;
-    line-height: 40px;
+    line-height: 100%;
     font-weight: 500;
     border-radius: 3px;
     color:white;
@@ -81,17 +82,6 @@ export const Data = styled.div`
         color: grey;
         font-size: normal;
         font-weight: 600;
-    }
-`
-
-export const MemberIcon = styled.span`
-    height: 32px;
-    width: 32px;
-    line-height: 32px;
-    border-radius: 50%;
-    background-color: ${props=>props.color};
-    :hover{
-        filter: brightness(1.05);
     }
 `
 

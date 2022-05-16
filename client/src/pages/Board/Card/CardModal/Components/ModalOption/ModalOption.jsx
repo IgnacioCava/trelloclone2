@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Close from "../../../../../../components/buttons/Close";
 import Button from "../../../../../../components/buttons/BlueLink";
-import { Buttons, Color, Colors, Info, Title, CheckIcon, Option, Icons, ChoiceModal, MemberIcon} from "./styled";
+import MemberIcon from "../../../../../../components/icons/MemberIcon";
+import { Buttons, Color, Colors, Info, Title, CheckIcon, Option, Icons, ChoiceModal} from "./styled";
 
 const ModalOption = ({type, icon, onClick, card, members, list, open, outerOpen}) => {
 
@@ -31,9 +32,7 @@ const ModalOption = ({type, icon, onClick, card, members, list, open, outerOpen}
                     <Icons>
                         {members.map((member, i) => (
                             <CheckIcon key={i}>
-                                <MemberIcon color={member.color} title={member.username}> 
-                                    {member.username.charAt(0)}
-                                </MemberIcon>
+                                <MemberIcon member={member}/>
                                 <input type='checkbox' checked={card.members.findIndex(e=>e.user===member.user)>-1} onChange={()=>onClick(member)}/>
                             </CheckIcon>
                         ))}
@@ -47,6 +46,7 @@ const ModalOption = ({type, icon, onClick, card, members, list, open, outerOpen}
                 </Title>
                 <Colors>
                     {colors.map((color, i) => <Color key={i} color={color} onClick={()=>handleColor({color})} style={{borderRadius:chosenColor.color===color?'50%':'10%'}}/>)}
+                    <Color><Close onClick={()=>handleColor({color:''})}/></Color>
                 </Colors>
                 <input type='text' placeholder='Label text' value={chosenColor.text} onChange={(e)=>handleColor({text:e.target.value})}/>
                 <Buttons>

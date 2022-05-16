@@ -26,7 +26,6 @@ const Home = withBoard(({state, actions}) =>{
                 <FormInput placeholder="Search by title" name='title' values={{form}} onChange={handleChange}/>
                 <Button onClick={()=>setOpen(true)}>New Board</Button>
             </Line>
-
             <Boards>
                 {state.boards.filter(e=>e.title.includes(form.title)).map((board, i)=>
                     <BoardBox key={i} width={24}><Link to={`/board/${board._id}`}><h1>{board.title}</h1></Link></BoardBox>

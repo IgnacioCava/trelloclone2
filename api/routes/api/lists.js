@@ -30,7 +30,7 @@ router.post(
 
       // Log activity
       const user = await User.findById(req.user.id);
-      board.activity.unshift({ text: `${user.name} added '${title}' to this board` });
+      board.activity.unshift({ text: `${user.username} added '${title}' to this board` });
       await board.save();
 
       res.json(list);
@@ -58,7 +58,7 @@ router.delete('/:id', [auth, member],
       board.lists = board.lists.filter(list => list._id !== listId);
       list.remove()
   
-      board.activity.unshift({ text: `${req.user.name} deleted list ${list.title}` });
+      board.activity.unshift({ text: `${req.user.username} deleted list ${list.title}` });
       await board.save();
     }
     catch(err){
@@ -114,13 +114,15 @@ router.patch(
 );
 
 // Archive/Unarchive a list
-router.patch('/archive/:archive/:id', [auth, member], async (req, res) => {
+router.patch('/archive/:id', [auth, member], async (req, res) => {
   try {
-    const list = await List.findById(req.params.id).select('archived title');
+    const { id } = req.params;
+    const list = await List.findById(id).select('archived title');
     if (!list)  return res.status(404).json({ msg: 'List not found' });
-    res.json(`List ${req.params.archive?'archived':'restored'} successfully`);
+    list.archived = !list.archived;
 
-    list.archived = req.params.archive === 'true';
+    res.send(`List ${list.archived?'archived':'restored'} successfully`);
+
     await list.save();
 
     // Log activity
@@ -128,8 +130,8 @@ router.patch('/archive/:archive/:id', [auth, member], async (req, res) => {
     const board = await Board.findById(req.header('boardId'));
     board.activity.unshift({
       text: list.archived
-        ? `${user.name} archived list '${list.title}'`
-        : `${user.name} sent list '${list.title}' to the board`,
+        ? `${user.username} archived list '${list.title}'`
+        : `${user.username} sent list '${list.title}' to the board`,
     });
     await board.save();
 

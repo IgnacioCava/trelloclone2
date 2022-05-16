@@ -9,6 +9,7 @@ import plus from './plus.png'
 import textIcon from './textIcon.png'
 import Trello from './Trello-logo.png'
 import userIcon from './userIcon.png'
+import ellipsisIcon from './ellipsisIcon.png'
 
 export {
     cardIcon,
@@ -21,9 +22,6 @@ export {
     plus,
     textIcon,
     Trello,
-    userIcon
+    userIcon,
+    ellipsisIcon
 }
-
-
-
-

@@ -13,20 +13,31 @@ export default function AuthStore(props) {
         createBoard: (...e)=>actions.createBoard(...e)(boardDispatch),
         clear: ()=>actions.clear()(boardDispatch),
         renameBoard: (...e)=>actions.renameBoard(...e)(boardDispatch),
+        getActivity: (...e)=>actions.getActivity(...e)(boardDispatch),
+        changeBoardBackground: (...e)=>actions.changeBoardBackground(...e)(boardDispatch),
+        getUser: ()=>actions.getUser()(boardDispatch),
+
         addList: (...e)=>actions.addList(...e)(boardDispatch),
         deleteList: (...e)=>actions.deleteList(...e)(boardDispatch),
         renameList: (...e)=>actions.renameList(...e)(boardDispatch),
+        toggleListStatus: (...e)=>actions.toggleListStatus(...e)(boardDispatch),
+
         addCard: (...e)=>actions.addCard(...e)(boardDispatch),
         deleteCard: (...e)=>actions.deleteCard(...e)(boardDispatch),
         editCard: (...e)=>actions.editCard(...e)(boardDispatch),
-        getUser: ()=>actions.getUser()(boardDispatch),
         toggleCardMember: (...e)=>actions.toggleCardMember(...e)(boardDispatch),
+        toggleCardStatus: (...e)=>actions.toggleCardStatus(...e)(boardDispatch),
+
         addChecklist: (...e)=>actions.addChecklist(...e)(boardDispatch),
         deleteChecklist: (...e)=>actions.deleteChecklist(...e)(boardDispatch),
         renameChecklist: (...e)=>actions.renameChecklist(...e)(boardDispatch),
         addChecklistItem: (...e)=>actions.addChecklistItem(...e)(boardDispatch),
         deleteChecklistItem: (...e)=>actions.deleteChecklistItem(...e)(boardDispatch),
         editChecklistItem: (...e)=>actions.editChecklistItem(...e)(boardDispatch),
+        
+        findUsers: (...e)=>actions.findUsers(...e),
+        addMember: (...e)=>actions.addMember(...e)(boardDispatch),
+        deleteMember: (...e)=>actions.deleteMember(...e)(boardDispatch),
     }
     
     const value = {board, dispatchedActions}

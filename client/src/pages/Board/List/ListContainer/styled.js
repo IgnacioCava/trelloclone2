@@ -10,7 +10,7 @@ export const SupDiv = styled.div`
     display: flex;
     width: 100%;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
 `
 
 export const ListContainer = styled.div`

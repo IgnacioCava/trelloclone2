@@ -12,6 +12,7 @@ const User = require('../../models/User');
 // Get users with email regex
 router.get('/email/:input', auth, async (req, res) => {
   try {
+    if(req.params.input==='*') return res.send([]);
     const email = new RegExp(req.params.input, 'i');
     const users = await User.find({email}).select('-password');
     res.json(users.filter((user) => user.id !== req.user.id));
