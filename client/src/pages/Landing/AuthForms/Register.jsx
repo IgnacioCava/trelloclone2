@@ -34,7 +34,7 @@ const Register = withAuth(({state, actions}) => {
         <Form onSubmit={handleSubmit}>
             {inputs.map(input => <FormInput key={input.name} type={input.name.includes('password')?'password':'text'} name={input.name} values={{form, errors}} label={input.label} onChange={handleChange}/> )}
 
-            <Button text='Sign up'/>
+            <Button>Sign up</Button>
             <Back>Or <Link to='/landing/login'>Log In</Link> to an existing account</Back>
         </Form>
     )
