@@ -49,10 +49,10 @@ router.delete('/:id', [auth, member],
 
     try{
       const board = await Board.findById(boardId).select('lists activity');
-      if(!board) throw {message: 'Board not found', status: 404}
+      if(!board) throw new Error({message: 'Board not found', status: 404});
       
       const list = await List.findById(listId).select('title');
-      if(!list) throw {message: 'List not found', status: 404};
+      if(!list) throw new Error('List not found');
 
       res.send(`List ${list.title} deleted`);
       board.lists = board.lists.filter(list => list._id !== listId);

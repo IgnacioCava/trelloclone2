@@ -20,8 +20,7 @@ router.post('/', [auth, member, [check('title', 'Title is required').not().isEmp
       const boardId = req.header('boardId');
 
       // Create and save the card
-      const user = await User.findById(req.user.id);
-      const newCard = new Card({ title, members: [{ user: user.id, username: user.username }]});
+      const newCard = new Card({ title });
       const card = await newCard.save();
       res.json({ card, listId });
 
@@ -29,8 +28,10 @@ router.post('/', [auth, member, [check('title', 'Title is required').not().isEmp
       const list = await List.findById(listId);
       list.cards.push(card.id);
       await list.save();
+      
 
       // Log activity
+      const user = await User.findById(req.user.id);
       const board = await Board.findById(boardId);
       board.activity.unshift({
         text: `${user.name} added '${title}' to '${list.title}'`,
@@ -70,19 +71,18 @@ router.get('/:id', auth, async (req, res) => {
 router.patch('/edit/:id', [auth, member], async (req, res) => {
   try {
     const { title, description, label } = req.body;
-
-    if (title === '') throw { message: 'Title is required', status: 400 }
+    if (title === '') throw new Error({ message: 'Title is required', status: 400 });
 
     const card = await Card.findById(req.params.id);
-    if (!card) throw { message: 'Card not found', status: 404 }
+    if (!card) throw new Error({ message: 'Card not found', status: 404 });
 
     card.title = title ? title : card.title;
 
     if (description || description === '') card.description = description;
-    if (label) card.label = label;
+    if (label || label === 'none') card.label = label;
 
-    await card.save();
     res.send("Card edited successfully");
+    await card.save();
   } catch (err) {
     console.log(err)
     res.status(err.status||500).send(err.message);
@@ -158,24 +158,27 @@ router.patch('/move/:id', [auth, member], async (req, res) => {
 });
 
 // Add/Remove a member
-router.put('/togglemember/:userId/:cardId', [auth, member], async (req, res) => {
+router.put('/addMember/:add/:cardId/:userId', [auth, member], async (req, res) => {
   try {
     const { cardId, userId } = req.params;
     const card = await Card.findById(cardId).select('members title');
-    const user = await User.findById(userId).select('username user');
+    const user = await User.findById(userId);
     if (!card || !user) return res.status(404).json({ msg: 'Card/user not found' });
 
+    const add = req.params.add === 'true';
     const members = card.members.map((member) => member.user);
     const index = members.indexOf(userId);
-    res.json(`${user.username} ${index===-1 ? 'joined' : 'left'} '${card.title}'`);
+    if ((add && index !== -1) || (!add && index)) return res.json(card)
 
-    index!==-1 ? card.members.splice(index, 1) : card.members.push({ user: user.id, username: user.username });
-    
+    if (add) card.members.push({ user: user.id, name: user.name });
+    else card.members.splice(index, 1);
+
     await card.save();
-
+    res.json(card);
+    
     // Log activity
     const board = await Board.findById(req.header('boardId'));
-    board.activity.unshift({ text: `${user.username} ${index===-1 ? 'joined' : 'left'} '${card.title}'`});
+    board.activity.unshift({ text: `${user.name} ${add ? 'joined' : 'left'} '${card.title}'`});
     await board.save();
 
   } catch (err) {

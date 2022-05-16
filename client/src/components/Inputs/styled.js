@@ -36,7 +36,7 @@ export const Input = styled.input`
 export const Wrap = styled.div`
     display: flex;
     gap: 5px;
-    width:100%;
+    width:90%;
 `
 
 export const Icon = styled.img`

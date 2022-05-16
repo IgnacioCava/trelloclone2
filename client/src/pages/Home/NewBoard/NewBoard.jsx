@@ -21,7 +21,8 @@ const NewBoard = ({close, create}) => {
     }
 
     return (
-        <NewBoardWrapper ref={outerBox} onClick={(e)=>e.target===outerBox.current? close() : null}>
+        <NewBoardWrapper ref={outerBox} onClick={(e)=>e.target===outerBox.current? close() : null
+            }>
             <Box onSubmit={handleSubmit}>
                 <CloseContainer>
                     <Close onClick={close}>x</Close>

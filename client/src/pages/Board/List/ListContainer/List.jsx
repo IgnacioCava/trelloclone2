@@ -4,23 +4,26 @@ import CreateElement from "../../Board/CreateElement/CreateElement";
 import { CreateCard, SupDiv, ListContainer } from "./styled";
 import Card from '../../Card/CardContainer/Card';
 
-const List = ({list, actions, members, user}) => {
+const List = ({list, actions}) => {
     const { deleteList, renameList, addCard } = actions;
-    
+
     return (
         <ListContainer>
+
             <SupDiv>
                 <ListTitle title={list.title} rename={(title)=>renameList(list._id, title)}/>
                 <Close onClick={()=>deleteList(list._id)}/>
             </SupDiv>
 
+
             {list.cards.map((card, i)=>
-                <Card key={i} actions={actions} list={list} card={card} members={members} user={user}/>
+                <Card key={i} actions={actions} list={list} card={card}/>
             )}
 
             <CreateCard>
-                <CreateElement create={(title)=>addCard(list._id, title)} name='card title'/>
+                <CreateElement create={(title)=>addCard(list._id, title)} name='card'/>
             </CreateCard>
+
         </ListContainer>
     )
 }

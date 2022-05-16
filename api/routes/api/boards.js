@@ -43,10 +43,10 @@ router.post('/', [auth, [check('title', 'Title is required').not().isEmpty()]],
 router.get('/', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).populate('boards', { _id: 1, title: 1 }).select('boards');
-    if(!user) throw {message: 'User not found', status: 404}
+    if(!user) throw new Error({message: 'User not found', status: 404});
     res.json(user.boards);
   } catch (err) {
-    res.status(err.status||500).send(err.message);
+    res.status(err.status).send(err.message);
   }
 });
 
@@ -84,14 +84,14 @@ router.patch('/rename/:id', [auth, member],
     
     try {
       const { title } = req.body;
-      if(!title) throw {message: 'Title is required', status: 400}
+      if(!title) throw new Error({message: 'Title is required', status: 400});
       const board = await Board.findById(req.params.id).select('title activity');
-      if (!board) throw {message: 'Board not found', status: 404}
+      if (!board) throw new Error({message: 'Board not found', status: 404});
       
       // Log activity
       if (title !== board.title) {
         const user = await User.findById(req.user.id);
-        if(!user) throw {message: 'User not found', status: 404}
+        if(!user) throw new Error({message: 'User not found', status: 404});
         board.activity.unshift({
           text: `${user.name} renamed this board (from '${board.title}')`,
         });
@@ -112,11 +112,11 @@ router.put('/addMember/:userId', [auth, member], async (req, res) => {
   try {
     const board = await Board.findById(req.header('boardId')).select('members activity');
     const user = await User.findById(req.params.userId);
-    if (!user) throw {message: 'User not found', status: 404}
+    if (!user) throw new Error({message: 'User not found', status: 404});
 
     // See if user is already a member of board. This method is 30% faster
     if(board.members.find(member => member.user === req.params.userId)){
-      throw {message: 'User already member of board', status: 400}
+      throw new Error({message: 'User already member of board', status: 400});
     }
 
     // Add board to user's boards

@@ -12,7 +12,7 @@ export const NewBoardWrapper = styled.div`
     top:0;
     z-index: 100;
     overflow: hidden;
-`
+    `
 
 export const Box = styled.form`
     box-shadow: 0 0 10px rgba(0,0,0,0.5);

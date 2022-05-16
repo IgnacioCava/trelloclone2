@@ -67,6 +67,7 @@ export const Boards = styled.div`
     justify-content: flex-start;
     align-items: center;
     width: 95%;
+    border: 10px solid white;
     background-color: white;
     margin:10px;
     box-sizing: border-box;
@@ -81,18 +82,5 @@ export const Boards = styled.div`
         background-color: #c6d0ff;
         border-radius: 10px;
         
-    }
-`
-
-export const Line = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    width: 50%;
-    min-width: 350px;
-    *{
-        width: 100%;
     }
 `

@@ -1,6 +1,6 @@
 import { InputWrapper, Label, Input, Error, Editable, Text, Icon, Wrap } from "./styled"
 import { useEffect, useState } from "react"
-import { editIcon } from "../../assets"
+import editIcon from "../../assets/editIcon.png"
 
 export default function EditableInput({type, name, placeholder, value, onChange, label}) {
     const inputProps={type:type||'text', name, placeholder, onChange}
@@ -13,13 +13,13 @@ export default function EditableInput({type, name, placeholder, value, onChange,
         setText(value)
     } , [value])
 
-    const handleInput = (e) => {
+    const handleInput = (e)=> {
         setText(e.target.value)
         if(!e.target.value) setError('Please enter a '+name)
         else setError('')
     }
 
-    const handleBlur = (e) => {
+    const handleBlur = (e)=> {
         const key = e.key
         if(!error){
             if(key==='Enter'){
@@ -35,11 +35,9 @@ export default function EditableInput({type, name, placeholder, value, onChange,
     }
 
     const handleClick = (e)=> {
-        if(!error){
-            setText(text.trim())
-            onChange(text.trim())
-            setEdit(false)
-        }
+        setText(text.trim())
+        onChange(text.trim())
+        setEdit(false)
     }
 
     return (

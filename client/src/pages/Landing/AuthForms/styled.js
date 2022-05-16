@@ -7,9 +7,6 @@ export const Form = styled.form`
     justify-content: space-around;
     align-items: center;
     width: 70%;
-    *{
-        width: 100%;
-    }
 `
 
 export const Back = styled.span`
