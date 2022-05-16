@@ -83,12 +83,13 @@ router.patch('/rename/:id', [auth, member],
   async (req, res) => {
     
     try {
-      if(!req.body.title) throw new Error({message: 'Title is required', status: 400});
+      const { title } = req.body;
+      if(!title) throw new Error({message: 'Title is required', status: 400});
       const board = await Board.findById(req.params.id).select('title activity');
       if (!board) throw new Error({message: 'Board not found', status: 404});
       
       // Log activity
-      if (req.body.title !== board.title) {
+      if (title !== board.title) {
         const user = await User.findById(req.user.id);
         if(!user) throw new Error({message: 'User not found', status: 404});
         board.activity.unshift({
@@ -96,8 +97,8 @@ router.patch('/rename/:id', [auth, member],
         });
       }
       
-      board.title = req.body.title;
-      res.send("Board successfully renamed to "+board.title);
+      board.title = title;
+      res.send("Board successfully renamed to "+title);
       await board.save();
       
     } catch (err) {

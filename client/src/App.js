@@ -5,13 +5,13 @@ import Landing from './pages/Landing/Container/Landing';
 import Register from './pages/Landing/AuthForms/Register';
 import Login from './pages/Landing/AuthForms/Login';
 import Directions from './pages/Landing/Directions/Directions';
-import Home from './pages/Home/Home';
+import Home from './pages/Home/HomeContainer/Home';
 import Navbar from './components/navbar/Navbar';
+import Board from './pages/Board/Board/BoardContainer/Board';
 import './App.css';
-import Board from './pages/Board/Board';
+
 
 export default function App() {
-
   return (
     <div className="App">
       <Routes>

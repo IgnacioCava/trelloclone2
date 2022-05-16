@@ -104,11 +104,9 @@ router.patch(
     try {
       const list = await List.findById(req.params.id).select('title');
       if (!list) throw new Error({ message: 'List not found', status: 404 });
-
-      res.json("List renamed successfully");
+      res.send("List successfully renamed to "+req.body.title);
       list.title = req.body.title;
       await list.save();
-      
     } catch (err) {
       res.status(err.status).send(err.message);
     }
