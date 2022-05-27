@@ -16,6 +16,10 @@ const ListSchema = new Schema({
     required: true,
     default: false,
   },
+  position: {
+    type: Number,
+    required: true,
+  }
 });
 
 module.exports = List = model('lists', ListSchema);
