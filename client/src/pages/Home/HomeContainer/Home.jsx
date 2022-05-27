@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { withBoard } from "../../../store/contexts/withBoard";
 import { Link } from "react-router-dom";
 import NewBoard from "../NewBoard/NewBoard";

@@ -1,32 +1,34 @@
-import { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import CardTitle from '../CardTitle/CardTitle';
 import CardModal from '../CardModal/CardModal';
 import { textIcon, eyeIcon, checkIconWhite, checkIcon } from '../../../../assets';
 import { Completed, WithLabel, Label, CardIcons, MemberIcons, Body, Title, CardHolder} from './styled'
 import MemberIcon from '../../../../components/icons/MemberIcon';
 import ExtendableOptions from '../../../../components/buttons/ExtendableOptions';
+import DnDHandler from '../../../../components/buttons/DnDHandler';
 
-const Card = ({card, list, actions, members, user}) => {
+const Card = ({card, list, actions, members, user, select}) => {
     const { deleteCard, editCard, toggleCardStatus } = actions;
 
     const [openModal, setOpen] = useState(false);
     const modal = useRef(null);
-
     const completedItems = useMemo(()=>card.checklists.map(e=>e.items).map(e=>e.map(e=>e.completed)).flat().map(e=>e===true?1:0).reduce((a,b)=>a+b,0), [card.checklists]);
     const allItems = useMemo(()=>card.checklists.map(e=>e.items).flat().length, [card.checklists]);
 
+    if(!card.archived)
     return (
-        <CardHolder ref={modal} onClick={(e)=>e.target===modal.current?setOpen(true):null}>
+        <CardHolder ref={modal} onClick={(e)=>e.target===modal.current?select(card._id):null}>
             <Title>
                 <WithLabel>
                     {card.label?.color||card.label?.text?
-                    <Label onClick={()=>setOpen(true)} color={card.label?.color}>{card.label?.text}</Label>:null}
+                    <Label onClick={()=>select(card._id)} color={card.label?.color}>{card.label?.text}</Label>:null}
                     <CardTitle title={card.title} rename={(title)=>editCard({title}, card._id, list._id)}/>
                 </WithLabel>
                 <ExtendableOptions archive={()=>toggleCardStatus(list._id, card._id)} erase={()=>deleteCard(list._id, card._id)} elementName={'card'}/>
+                <div><DnDHandler direction='y'/></div>
             </Title>
 
-            <Body onClick={()=>setOpen(true)}>
+            <Body onClick={()=>select(card._id)}>
                 <CardIcons>
                     {card.members.findIndex(e=>e.user===user.id)>-1?
                     <img title='You are a member of this card' src={eyeIcon} alt='textIcon'/> : null}
@@ -45,9 +47,10 @@ const Card = ({card, list, actions, members, user}) => {
                     <MemberIcon key={i} member={member} diameter={28}/>:null)}
                 </MemberIcons>
             </Body>
-            {openModal?<CardModal card={card} list={list} close={()=>setOpen(false)} actions={actions} members={members} user={user}/>:null}
+            {/* {openModal?<CardModal card={card} list={list} close={()=>select(null)} actions={actions} members={members} user={user}/>:null} */}
         </CardHolder>
     )
+    else return <div></div>
 }
 
 export default Card

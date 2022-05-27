@@ -142,3 +142,14 @@ export const Widget = styled.div`
             filter: brightness(1.15);
     }
 `
+
+export const Error = styled.div`
+display: flex;
+align-items: center;
+justify-content: space-around;
+font-size: 1.2rem;
+font-weight: bold;
+color: white;
+align-items: baseline;
+`
+    

@@ -1,9 +1,8 @@
-import Close from '../../../../../../components/buttons/Close'
+import React, { useMemo } from 'react'
 import EditableInput from '../../../../../../components/Inputs/EditableInput'
 import CreateElement from '../../../../Board/CreateElement/CreateElement'
-import { Progress, Max, Current, Title, ChecklistItem, Checklist } from './styled'
-import { useMemo } from 'react'
 import ExtendableOptions from '../../../../../../components/buttons/ExtendableOptions'
+import { Progress, Max, Current, Title, ChecklistItem, Checklist } from './styled'
 
 const ChecklistComponent = ({listId, cardId, actions, checklist}) => {
 

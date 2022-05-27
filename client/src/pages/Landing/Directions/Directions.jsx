@@ -1,3 +1,4 @@
+import React from 'react';
 import Link from '../../../components/buttons/BlueLink'
 import { MainWrapper, Actions } from './styled'
 

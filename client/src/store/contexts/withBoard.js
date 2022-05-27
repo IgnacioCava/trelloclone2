@@ -1,3 +1,4 @@
+import React from 'react';
 import {BoardContext} from './BoardStore';
 
 export const withBoard = Component => props => {

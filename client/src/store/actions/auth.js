@@ -12,7 +12,7 @@ export const register = (formData, redirect) => async dispatch => {
         const body = JSON.stringify(formData)
         const response = await axios.post('/auth/register', body, config )
         localStorage.setItem('token', response.data.token)
-        dispatch(loadUser())
+        await dispatch(loadUser())
         redirect()
     }
     catch(error){
@@ -28,7 +28,7 @@ export const login = (formData, redirect) => async dispatch => {
         const body = JSON.stringify(formData)
         const response = await axios.post('/auth/login', body, config )
         localStorage.setItem('token', response.data.token)
-        dispatch(loadUser())
+        await dispatch(loadUser())
         redirect()
     }
     catch(error){
@@ -40,9 +40,9 @@ export const login = (formData, redirect) => async dispatch => {
 }
 
 export const loadUser = () => async (dispatch) => { 
-    const token = localStorage.getItem('token')
-
     try {
+        const token = localStorage.getItem('token')
+
         const res = await axios.get('/auth', {headers: {token}});
         dispatch({
             type: SET_USER,

@@ -1,3 +1,4 @@
+import React from 'react';
 import { InputWrapper, Label, Input, Error } from "./styled"
 
 export default function FormInput({type, name, placeholder, values, onChange, label}) {

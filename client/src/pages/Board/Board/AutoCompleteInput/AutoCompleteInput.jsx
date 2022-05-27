@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import MemberIcon from "../../../../components/icons/MemberIcon";
 import { UserData, Email, Search, User, Found, Input } from './styled'
 

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import React, { useState, useRef } from "react"
 import { plus, cross } from "../../../../assets"
 import Button from "../../../../components/buttons/BlueLink"
 import {ElementInput, Exit, Options, CreateElementWrapper, PlusIcon, NewElementText, Clickable, ElementForm, ElementArea, Text} from "./styled"

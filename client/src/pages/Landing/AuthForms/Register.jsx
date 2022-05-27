@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import React, { useState, useMemo } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { withAuth } from "../../../store/contexts/withAuth"
 import FormInput from "../../../components/Inputs/FormInput"
@@ -35,7 +35,7 @@ const Register = withAuth(({state, actions}) => {
             {inputs.map(input => <FormInput key={input.name} type={input.name.includes('password')?'password':'text'} name={input.name} values={{form, errors}} label={input.label} onChange={handleChange}/> )}
 
             <Button>Sign up</Button>
-            <Back>Or <Link to='/landing/login'>Log In</Link> to an existing account</Back>
+            <Back>Or <Link to='/login'>Log In</Link> to an existing account</Back>
         </Form>
     )
 })

@@ -5,7 +5,7 @@ export const Lists = styled.div`
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
-    width: 100%;
+    width: fit-content;
     height: fit-content;
 `
 

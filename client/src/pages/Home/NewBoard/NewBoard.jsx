@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { NewBoardWrapper, Box, CloseContainer } from './styled';
 import FormInput from '../../../components/Inputs/FormInput';
 import Button from '../../../components/buttons/BlueLink';

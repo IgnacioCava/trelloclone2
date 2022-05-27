@@ -26,7 +26,6 @@ export const User = styled.div`
     width: 100%;
     padding: 5px;
     box-sizing: border-box;
-    overflow: hidden;
     border-radius: 3px;
     gap: 10px;
     cursor: pointer;
@@ -35,12 +34,13 @@ export const User = styled.div`
 export const Found = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    height: 400px;
     align-items: flex-start;
-    width: 100%;
+    width: fit-content;
     position: absolute;
-    height: fit-content;
     background-color: #eeeeee;
+    overflow: auto;
     padding: 5px;
     gap: 10px;
     z-index: 1;
@@ -48,7 +48,7 @@ export const Found = styled.div`
 `
 
 export const Input = styled.input`
-    width: 100%;
+    width: 115%;
     border: 1px solid #ccc;
     outline: none;
     transition: all 0.3s;

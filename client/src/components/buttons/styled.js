@@ -7,13 +7,14 @@ export const AuthAction = styled.div`
     border-radius: 5px;
     padding:0px;
     box-sizing: border-box;
-    background-color: #2a73e2;
+    background-color: ${props => props.alternate ? props.alternate : '#2a73e2'};
     color: white;
     font: bold 1.2rem 'Roboto', sans-serif;
-    *{cursor: pointer;}
+    *{cursor: ${props => props.disabled ? 'default' : 'pointer'}}
     transition: all 0.2s ease-in-out;
     overflow: hidden;
     margin:5px;
+    filter: ${props => props.disabled ? 'brightness(60%)' : 'brightness(100%)'};
     a, button{
         display: flex;
         width: 100%;
@@ -29,7 +30,7 @@ export const AuthAction = styled.div`
         font: inherit;
     }
     &:hover{
-        background-color: #3a89ff;
+        filter: ${props => props.disabled ? 'brightness(60%)' : 'brightness(130%)'};
     }
 `
 
@@ -158,4 +159,17 @@ export const Ellipsis = styled.img`
         transform: scale(1.1);
         background-color: #f5f5f5;
     }
+`
+
+export const Handle = styled.img`
+    height: 15px;
+    padding:5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: center;
+    margin-right: ${props => props.direction==='x' ? '5px' : '0'};
+    transform: ${props => props.direction==='x' ? 'rotate(0deg)' : 'rotate(90deg)'};
+    user-select: none;
+    cursor: pointer;
 `

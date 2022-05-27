@@ -14,6 +14,7 @@ export const CLEAR = 'CLEAR';
 export const BOARD_ERROR = 'BOARD_ERROR';
 export const GET_ACTIVITY = 'GET_ACTIVITY';
 export const GET_USER = 'GET_USER';
+export const SORT_BOARD_LISTS = 'SORT_BOARD_LISTS';
 
 export const ADD_MEMBER = 'ADD_MEMBER';
 export const DELETE_MEMBER = 'DELETE_MEMBER';
@@ -22,6 +23,7 @@ export const ADD_LIST = 'ADD_LIST';
 export const DELETE_LIST = 'DELETE_LIST';
 export const RENAME_LIST = 'RENAME_LIST';
 export const TOGGLE_LIST_STATUS = 'TOGGLE_LIST_STATUS';
+export const SORT_LIST_CARDS = 'SORT_LIST_CARDS';
 
 export const ADD_CARD = 'ADD_CARD';
 export const DELETE_CARD = 'DELETE_CARD';
