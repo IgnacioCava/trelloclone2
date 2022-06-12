@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import React from 'react';
 import AuthStore from './store/contexts/AuthStore';
 import BoardStore from './store/contexts/BoardStore';
 import Landing from './pages/Landing/Container/Landing';

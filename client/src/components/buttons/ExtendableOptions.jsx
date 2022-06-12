@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Close from './Close'
 import { ellipsisIcon } from '../../assets';
 import { Text, Safe, Archive, Delete, Extendable, Overcast, Ellipsis } from './styled';

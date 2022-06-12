@@ -2,7 +2,7 @@ import Close from "../../../../components/buttons/Close";
 import CardTitle from "../CardTitle/CardTitle";
 import CreateElement from "../.././Board/CreateElement/CreateElement";
 import ModalOption from "./Components/ModalOption/ModalOption";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import ChecklistComponent from "./Components/Checklist/Checklist";
 import Section from "./Components/Section/Section"
 import MemberIcon from "../../../../components/icons/MemberIcon";

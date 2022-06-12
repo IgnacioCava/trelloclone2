@@ -1,3 +1,4 @@
+import React from 'react';
 import { Icon } from './styled'
 
 const MemberIcon = ({member, diameter, onClick}) => {

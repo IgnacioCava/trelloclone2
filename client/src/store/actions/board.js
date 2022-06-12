@@ -2,7 +2,7 @@ import
 { GET_BOARD, GET_BOARDS, CREATE_BOARD, BOARD_ERROR, CLEAR, RENAME_BOARD, ADD_LIST, DELETE_LIST, RENAME_LIST, ADD_CARD, 
     DELETE_CARD, EDIT_CARD, TOGGLE_CARD_MEMBER, GET_USER, ADD_CHECKLIST, EDIT_CHECKLIST, DELETE_CHECKLIST, ADD_CHECKLIST_ITEM, 
     EDIT_CHECKLIST_ITEM, DELETE_CHECKLIST_ITEM, ADD_MEMBER, DELETE_MEMBER, TOGGLE_LIST_STATUS, TOGGLE_CARD_STATUS, 
-    GET_ACTIVITY, CHANGE_BOARD_BACKGROUND }
+    GET_ACTIVITY, CHANGE_BOARD_BACKGROUND, SORT_BOARD_LISTS, SORT_LIST_CARDS }
 from '../actions'
 import axios from 'axios'
 
@@ -63,6 +63,16 @@ export const renameBoard = (id, title) => async dispatch => {
         act(dispatch, BOARD_ERROR, err.response.data.message)
     }
     getActivity()(dispatch)
+}
+
+export const sortBoardLists = (newListSort) => async dispatch => {
+    try {
+        act(dispatch, SORT_BOARD_LISTS, newListSort)
+        const body = JSON.stringify({newListSort: newListSort.map(e=>e._id)})
+        await axios.patch(`/api/boards/sort`, body, config)
+    } catch (err) {
+        act(dispatch, BOARD_ERROR, err.response.data.message)
+    }
 }
 
 export const changeBoardBackground = (id, backgroundURL) => async dispatch => {
@@ -126,6 +136,16 @@ export const renameList = (id, title) => async dispatch => {
         act(dispatch, BOARD_ERROR, err.response.data.message)
     }
     getActivity()(dispatch)
+}
+
+export const sortListCards = (id, newCardSort) => async dispatch => {
+    try {
+        act(dispatch, SORT_LIST_CARDS, {id, newCardSort})
+        const body = JSON.stringify({newCardSort: newCardSort.map(e=>e._id)})
+        await axios.patch(`/api/lists/sort/${id}`, body, config)
+    } catch (err) {
+        act(dispatch, BOARD_ERROR, err.response.data.message)
+    }
 }
 
 export const toggleListStatus = listId => async dispatch => {

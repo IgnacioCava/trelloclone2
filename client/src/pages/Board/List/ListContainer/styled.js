@@ -22,9 +22,13 @@ export const ListContainer = styled.div`
     height: 100%;
     border: 1px solid #ccc;
     background-color: #ebecf0;
-    border-radius: 5px;
-    margin: 0 4px;
+    border-radius: 3px;
     padding:10px;
     gap:5px;
+    margin-right:7px;
     box-sizing: border-box;
+`
+
+export const Cards = styled.div`
+    width: 100%;
 `

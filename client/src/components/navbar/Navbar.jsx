@@ -1,6 +1,6 @@
-import { withAuth } from "../../store/contexts/withAuth"
+import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { useEffect } from "react"
+import { withAuth } from "../../store/contexts/withAuth"
 import { NavBar, Buttons, LogOut } from './styled'
 
 const Navbar = withAuth(({state, actions}) => {

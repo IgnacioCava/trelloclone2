@@ -1,7 +1,7 @@
 import { GET_BOARD, GET_BOARDS, CREATE_BOARD, BOARD_ERROR, CLEAR, RENAME_BOARD, ADD_LIST, DELETE_LIST, RENAME_LIST, 
     ADD_CARD, DELETE_CARD, EDIT_CARD, GET_USER, TOGGLE_CARD_MEMBER, ADD_CHECKLIST, EDIT_CHECKLIST, DELETE_CHECKLIST, 
     ADD_CHECKLIST_ITEM, EDIT_CHECKLIST_ITEM, DELETE_CHECKLIST_ITEM, ADD_MEMBER, DELETE_MEMBER, TOGGLE_CARD_STATUS, 
-    TOGGLE_LIST_STATUS, GET_ACTIVITY, CHANGE_BOARD_BACKGROUND } from '../actions'
+    TOGGLE_LIST_STATUS, GET_ACTIVITY, CHANGE_BOARD_BACKGROUND, SORT_BOARD_LISTS, SORT_LIST_CARDS } from '../actions'
 
 export const boardState = {
     boards: [],
@@ -48,6 +48,14 @@ export const boardReducer = (state, action) => {
                     title: payload.title
                 }
             }
+        case SORT_BOARD_LISTS: 
+            return {
+                ...state,
+                thisBoard: {
+                    ...state.thisBoard,
+                    lists: payload
+                }
+            }
         case CHANGE_BOARD_BACKGROUND:
             return {
                 ...state,
@@ -88,6 +96,14 @@ export const boardReducer = (state, action) => {
                 thisBoard: {
                     ...state.thisBoard,
                     lists: state.thisBoard.lists.map(list=>list._id===payload.id? {...list, title: payload.title} : list)
+                }
+            }
+        case SORT_LIST_CARDS:
+            return {
+                ...state,
+                thisBoard: {
+                    ...state.thisBoard,
+                    lists: state.thisBoard.lists.map(list=>list._id===payload.id? {...list, cards: payload.newCardSort} : list)
                 }
             }
         case TOGGLE_LIST_STATUS:
@@ -166,7 +182,8 @@ export const boardReducer = (state, action) => {
                                 card.members.filter(member=>member.user!==payload.user.user) : [...card.members, payload.user]
                             } : card)]} : list)],
                     allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId? 
-                        {...card, members: card.members.filter(member=>member.user!==payload.userId)}
+                        {...card, members: card.members.findIndex(member=>member.user===payload.user.user)>-1?
+                            card.members.filter(member=>member.user!==payload.user.user) : [...card.members, payload.user]}
                         : card)]
                 }
             }

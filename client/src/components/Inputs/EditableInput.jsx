@@ -1,5 +1,5 @@
 import { InputWrapper, Label, Input, Error, Editable, Text, Icon, Wrap } from "./styled"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { editIcon } from "../../assets"
 
 export default function EditableInput({type, name, placeholder, value, onChange, label}) {

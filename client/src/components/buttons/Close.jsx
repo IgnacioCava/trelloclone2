@@ -1,3 +1,4 @@
+import React from 'react'
 import { CloseButton } from './styled';
 import { cross } from '../../assets';
 

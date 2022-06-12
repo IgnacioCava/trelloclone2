@@ -79,6 +79,25 @@ router.get('/activity/:boardId', auth, async (req, res) => {
   }
 });
 
+// Move a board's lists
+router.patch('/sort', [auth, member], async (req, res) => {
+  const boardId = req.header('boardId');
+  const { newListSort } = req.body;
+
+  try {
+    const board = await Board.findById(boardId).select('lists activity');
+    if (!board) throw { message: 'Board not found', status: 404 };
+
+    board.lists=newListSort;
+
+    await board.save();
+    res.json('Lists moved');
+
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+})
+
 // Change a board's title
 router.patch('/rename/:id', [auth, member],
   async (req, res) => {

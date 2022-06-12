@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { withAuth } from "../../../store/contexts/withAuth"
 import FormInput from "../../../components/Inputs/FormInput"
 import Button from "../../../components/buttons/BlueLink"
@@ -33,7 +33,7 @@ const Login = withAuth(({state, actions}) => {
                 <FormInput type='password' name='password' values={{form, errors}} label='Password' onChange={handleChange}/>
 
                 <Button>Log In</Button>
-                <Back>Or <Link to='/landing/register'>Sign Up</Link> into a new account</Back>
+                <Back>Or <Link to='/register'>Sign Up</Link> into a new account</Back>
             </Form>
     )
 })

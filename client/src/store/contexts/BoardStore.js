@@ -15,12 +15,14 @@ export default function AuthStore(props) {
         renameBoard: (...e)=>actions.renameBoard(...e)(boardDispatch),
         getActivity: (...e)=>actions.getActivity(...e)(boardDispatch),
         changeBoardBackground: (...e)=>actions.changeBoardBackground(...e)(boardDispatch),
+        sortBoardLists: (...e)=>actions.sortBoardLists(...e)(boardDispatch),
         getUser: ()=>actions.getUser()(boardDispatch),
 
         addList: (...e)=>actions.addList(...e)(boardDispatch),
         deleteList: (...e)=>actions.deleteList(...e)(boardDispatch),
         renameList: (...e)=>actions.renameList(...e)(boardDispatch),
         toggleListStatus: (...e)=>actions.toggleListStatus(...e)(boardDispatch),
+        sortListCards: (...e)=>actions.sortListCards(...e)(boardDispatch),
 
         addCard: (...e)=>actions.addCard(...e)(boardDispatch),
         deleteCard: (...e)=>actions.deleteCard(...e)(boardDispatch),

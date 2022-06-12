@@ -1,3 +1,4 @@
+import React from 'react';
 import EditableInput from "../../../../components/Inputs/EditableInput";
 import { Custom } from "./styled";
 

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../../../../components/buttons/BlueLink';
-import { Restore, Delete, Title, From, Options, Elements, Element, Content, ArchiveWrapper, Widget} from './styled';
+import { Restore, Delete, Title, From, Options, Elements, Element, Content, ArchiveWrapper, Widget, Error} from './styled';
 
 const Archive = ({actions, cards, lists, activity}) => {
 
@@ -47,7 +47,7 @@ const Archive = ({actions, cards, lists, activity}) => {
                 <Button onClick={()=>setSelectArchive('Activity')}>View Activity</Button>
                 <Button onClick={()=>setSelectArchive('Lists')}>View Lists</Button>
                 <Button onClick={()=>setSelectArchive('Cards')}>View Cards</Button>
-                <Title>{selectArchive}</Title>
+                {selected.length?<Title>{selectArchive}</Title>:null}
                 <Elements>
                     {selectArchive==='Activity'?
                         activity.map((e,i)=>
@@ -56,7 +56,7 @@ const Archive = ({actions, cards, lists, activity}) => {
                                 <From>{e.date.split('T').join(', ').replaceAll('Z','')}</From>
                             </Element>
                         )
-                    :selected.map((e, i)=>
+                    :selected.length?selected.map((e, i)=>
                             <Element key={i}>
                                 <Title>
                                     {e.title}
@@ -74,7 +74,7 @@ const Archive = ({actions, cards, lists, activity}) => {
                                 </Options>
                             </Element>
                         )
-                    }
+                    :(selectArchive&&<Error>No archived {selectArchive.toLowerCase()}</Error>)}
                 </Elements>
             </Content>
         </ArchiveWrapper>

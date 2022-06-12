@@ -20,12 +20,13 @@ router.post(
       const title = req.body.title;
       const boardId = req.header('boardId');
 
+      const board = await Board.findById(boardId).select('lists activity');
+
       // Create and save the list
-      const newList = new List({ title });
+      const newList = new List({ title, position:board.lists.length });
       const list = await newList.save();
 
       // Assign the list to the board
-      const board = await Board.findById(boardId).select('lists activity');
       board.lists.push(list.id);
 
       // Log activity
@@ -40,6 +41,48 @@ router.post(
     }
   }
 );
+
+// Move a list's cards
+router.patch('/sort/:id', [auth, member], async (req, res) => {
+  const boardId = req.header('boardId');
+  const listId = req.params.id;
+  const { newCardSort } = req.body;
+
+  try {
+    const board = await Board.findById(boardId).select('lists activity');
+    if(!board) throw {message: 'Board not found', status: 404}
+    
+    const list = await List.findById(listId).select('title cards');
+    if(!list) throw {message: 'List not found', status: 404};
+
+    list.cards=newCardSort;
+
+    await list.save();
+    res.json('Cards moved');
+
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+})
+
+// Move a board's lists
+router.patch('/sort', [auth, member], async (req, res) => {
+  const boardId = req.header('boardId');
+  const { newListSort } = req.body;
+
+  try {
+    const board = await Board.findById(boardId).select('lists activity');
+    if (!board) throw { message: 'Board not found', status: 404 };
+
+    board.lists=newListSort;
+
+    await board.save();
+    res.json('Lists moved');
+
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+})
 
 // Delete a list
 router.delete('/:id', [auth, member],
@@ -67,7 +110,6 @@ router.delete('/:id', [auth, member],
 
   }
 );
-
 
 // Get all of a board's lists
 router.get('/boardLists/:boardId', auth, async (req, res) => {

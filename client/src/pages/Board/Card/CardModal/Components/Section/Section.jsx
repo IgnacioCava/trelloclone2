@@ -1,3 +1,4 @@
+import React from 'react';
 import { Description, DescIcon, DescData } from './styled';
 
 const Section = ({ title, icon, children }) => {

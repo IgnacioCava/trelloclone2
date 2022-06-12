@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Close from "../../../../../../components/buttons/Close";
 import Button from "../../../../../../components/buttons/BlueLink";
 import MemberIcon from "../../../../../../components/icons/MemberIcon";
@@ -50,8 +50,8 @@ const ModalOption = ({type, icon, onClick, card, members, list, open, outerOpen}
                 </Colors>
                 <input type='text' placeholder='Label text' value={chosenColor.text} onChange={(e)=>handleColor({text:e.target.value})}/>
                 <Buttons>
-                    <Button onClick={()=>onClick({label:chosenColor})}>Edit label</Button>
-                    <Button onClick={()=>{
+                    <Button onClick={()=>onClick({label:chosenColor})} alternate={(card.label?.text!==chosenColor.text||card.label?.color!==chosenColor.color)&&'green'}>{card.label?.text||card.label?.color?'Edit':'Add'} label</Button>
+                    <Button disabled={!card.label?.text&&!card.label?.color} onClick={()=>{
                         handleColor({color:'',text:''})
                         onClick({label:{color:'',text:''}})
                         }}>Remove label</Button>
