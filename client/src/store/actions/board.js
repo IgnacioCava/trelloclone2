@@ -34,6 +34,7 @@ export const getBoard = id => async dispatch => {
         if (res) {
             axios.defaults.headers.common['boardId'] = id;
             axios.defaults.headers.common['token'] = localStorage.token;
+            getActivity()(dispatch)
         }
         else {
             delete axios.defaults.headers.common['boardId'];
@@ -41,8 +42,7 @@ export const getBoard = id => async dispatch => {
         }
     } catch (err) {
         act(dispatch, BOARD_ERROR, err.response.data.message)
-    }
-    getActivity()(dispatch)
+    }    
 }
 
 export const createBoard = formData => async dispatch => {
@@ -305,7 +305,7 @@ export const findUsers = async (query)  => {
 
 export const getActivity = () => async dispatch => {
     try {
-        const res = await baseURL.get(`/api/boards/activity`, config)
+        const res = await baseURL.get(`/api/boards/activity`, {...config, ...axios.defaults.headers.common.boardId})
         act(dispatch, GET_ACTIVITY, res.data)
     } catch (err) {
         act(dispatch, BOARD_ERROR, err.response.data.message)
