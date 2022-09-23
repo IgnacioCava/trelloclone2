@@ -70,7 +70,8 @@ router.get('/:id', auth, async (req, res) => {
 // Get a board's activity
 router.get('/activity', auth, async (req, res) => {
   try {
-    const board = await Board.findById(req.header('boardId')).select('activity');
+    if(!req.header('boardId')) res.status(404).json({ msg: 'No ID was provived' });
+    const board = await Board.findById(req.header('boardId').toString())?.select('activity');
     if (!board) return res.status(404).json({ msg: 'Board not found' });
 
     res.json(board.activity);
