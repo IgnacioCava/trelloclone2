@@ -25,6 +25,13 @@ const app = express();
 // Init middleware
 app.use(express.json({ extended: false }));
 
+app.use((res, res, next) => {
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
+})
+
 // Define routes
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
