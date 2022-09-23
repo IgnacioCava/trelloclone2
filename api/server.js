@@ -33,8 +33,6 @@ app.use('/api/lists', require('./routes/api/lists'));
 app.use('/api/cards', require('./routes/api/cards'));
 app.use('/api/checklists', require('./routes/api/checklists'));
 
-
-
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log('Server started on port ' + PORT));
