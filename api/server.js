@@ -25,7 +25,7 @@ const app = express();
 // Init middleware
 app.use(express.json({ extended: false }));
 
-app.use((req, res, next) => {
+app.use('/', (req, res, next) => {
   if (req.method === 'OPTIONS') {
     res.status(200).end()
     return
