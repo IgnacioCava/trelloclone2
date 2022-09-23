@@ -30,6 +30,7 @@ app.use('/', (req, res, next) => {
     res.status(200).end()
     return
   }
+  else next()
 })
 
 // Define routes
