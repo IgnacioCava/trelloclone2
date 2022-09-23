@@ -25,6 +25,12 @@ const app = express();
 // Init middleware
 app.use(express.json({ extended: false }));
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // Define routes
 app.use('/api/users', require('./routes/api/users'));
 app.use('/auth', require('./routes/api/auth'));
