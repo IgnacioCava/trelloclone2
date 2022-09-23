@@ -18,7 +18,7 @@ const act = (dispatch, type, payload) => dispatch({type,payload})
 
 export const getBoards = () => async dispatch => {
     try {
-        const res = await baseURL.get('/api/boards', {headers: {...config.headers, token: localStorage.token}})
+        const res = await baseURL.get('/api/boards', config)
         act(dispatch, GET_BOARDS, res.data)
     } catch (err) {
         act(dispatch, BOARD_ERROR, err.response.data.message)

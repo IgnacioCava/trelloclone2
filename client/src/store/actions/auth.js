@@ -1,10 +1,16 @@
 import { SET_USER, LOGOUT, AUTH_ERROR } from '.'
 import baseURL from '../../settings/apiRequest'
 
+const config = {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+}
+
 export const register = (formData, redirect) => async dispatch => {
     try{
         const body = JSON.stringify(formData)
-        const response = await baseURL.post('/auth/register', body )
+        const response = await baseURL.post('/auth/register', body, config )
         localStorage.setItem('token', response.data.token)
         await dispatch(loadUser())
         redirect()
@@ -20,7 +26,7 @@ export const register = (formData, redirect) => async dispatch => {
 export const login = (formData, redirect) => async dispatch => {
     try{
         const body = JSON.stringify(formData)
-        const response = await baseURL.post('/auth/login', body )
+        const response = await baseURL.post('/auth/login', body, config )
         localStorage.setItem('token', response.data.token)
         await dispatch(loadUser())
         redirect()
