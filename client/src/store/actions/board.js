@@ -303,9 +303,9 @@ export const findUsers = async (query)  => {
     return (await baseURL.get(`/api/users/email/${query}`)).data
 }
 
-export const getActivity = (id) => async dispatch => {
+export const getActivity = () => async dispatch => {
     try {
-        const res = await baseURL.get(`/api/boards/activity/${id}`, config)
+        const res = await baseURL.get(`/api/boards/activity`, config)
         act(dispatch, GET_ACTIVITY, res.data)
     } catch (err) {
         act(dispatch, BOARD_ERROR, err.response.data.message)
