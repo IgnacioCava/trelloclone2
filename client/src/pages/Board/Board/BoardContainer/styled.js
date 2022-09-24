@@ -28,7 +28,7 @@ export const BoardWrapper = styled.div`
 export const Members = styled.div`
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-start;
     margin: 10px 4px;
     gap: 5px;

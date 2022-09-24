@@ -29,11 +29,11 @@ export const clear = () => dispatch => act(dispatch, CLEAR)
 
 export const getBoard = id => async dispatch => {
     try {
-        const res = await baseURL.get(`/api/boards/${id}`, config)
+        const res = await baseURL.get(`/api/boards/id/${id}`, config)
         act(dispatch, GET_BOARD, res.data)
         if (res) {
-            axios.defaults.headers.common['boardId'] = id;
             axios.defaults.headers.common['token'] = localStorage.token;
+            config.headers.boardId = id
             getActivity()(dispatch)
         }
         else {
@@ -152,7 +152,7 @@ export const sortListCards = (id, newCardSort) => async dispatch => {
 export const toggleListStatus = listId => async dispatch => {
     try {
         act(dispatch, TOGGLE_LIST_STATUS, {listId})
-        await baseURL.patch(`/api/lists/archive/${listId}`, config)
+        await baseURL.patch(`/api/lists/archive/${listId}`, {}, config)
     } catch (err) {
         act(dispatch, BOARD_ERROR, err.response.data.message)
     }
@@ -195,7 +195,7 @@ export const editCard = (formData, cardId, listId) => async dispatch => {
 export const toggleCardStatus = (listId, cardId) => async dispatch => {
     try {
         act(dispatch, TOGGLE_CARD_STATUS, {listId, cardId})
-        await baseURL.patch(`/api/cards/archive/${cardId}`, config)
+        await baseURL.patch(`/api/cards/archive/${cardId}`, {}, config)
     } catch (err) {
         act(dispatch, BOARD_ERROR, err.response.data.message)
     }
@@ -214,7 +214,7 @@ export const getUser = () => async dispatch => {
 export const toggleCardMember = (user, cardId, listId) => async dispatch => {
     try {
         act(dispatch, TOGGLE_CARD_MEMBER, {user, cardId, listId})
-        await baseURL.put(`/api/cards/togglemember/${user.user}/${cardId}`)
+        await baseURL.put(`/api/cards/togglemember/${user.user}/${cardId}`, {}, config)
     } catch (err) {
         act(dispatch, BOARD_ERROR, err.response.data.message)
     }
@@ -282,30 +282,33 @@ export const editChecklistItem = (formData, itemId, checklistId, cardId, listId)
 }
 
 export const addMember = (user) => async dispatch => {
+    console.log(config.headers.token)
     try {
-        const res = await baseURL.put(`/api/boards/members/add/${user._id}`, config)
+        const res = await baseURL.put(`/api/boards/members/add/${user._id}`, {}, config)
+        console.log(res)
         act(dispatch, ADD_MEMBER, res.data)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        console.log(err)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
 export const deleteMember = (user) => async dispatch => {
     try {
         act(dispatch, DELETE_MEMBER, user.user)
-        await baseURL.put(`/api/boards/members/remove/${user.user}`, config)
+        await baseURL.put(`/api/boards/members/remove/${user.user}`, {}, config)
     } catch (err) {
         act(dispatch, BOARD_ERROR, err.response.data.message)
     }
 }
 
 export const findUsers = async (query)  => {
-    return (await baseURL.get(`/api/users/email/${query}`)).data
+    return (await baseURL.get(`/api/users/email/${query}`, config)).data
 }
 
 export const getActivity = () => async dispatch => {
     try {
-        const res = await baseURL.get(`/api/boards/activity`, {...config, ...axios.defaults.headers.common.boardId})
+        const res = await baseURL.get(`/api/boards/activity`, config)
         act(dispatch, GET_ACTIVITY, res.data)
     } catch (err) {
         act(dispatch, BOARD_ERROR, err.response.data.message)

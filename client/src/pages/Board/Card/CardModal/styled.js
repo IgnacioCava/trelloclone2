@@ -207,7 +207,14 @@ export const Modal = styled.div`
     margin: 0;
     border: 0;
     border-radius: 0;
+    box-sizing: border-box;
     box-shadow: 0 0 0 0;
-    background-clip: border-box;
     transition: all 0.3s ease-in-out;
+`
+
+export const Positioner = styled.div`
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
 `

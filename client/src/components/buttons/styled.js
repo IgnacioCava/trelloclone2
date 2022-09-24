@@ -5,7 +5,7 @@ export const AuthAction = styled.div`
     height: 3rem;
     border: none;
     border-radius: 5px;
-    padding:0px;
+    padding-inline:4px;
     box-sizing: border-box;
     background-color: ${props => props.alternate ? props.alternate : '#2a73e2'};
     color: white;
@@ -67,7 +67,7 @@ export const Text = styled.div`
     div{
         display: flex;
         height: 100%;
-        justify-content: space-around;
+        justify-content: space-evenly;
         align-items: center;
     }
     button{

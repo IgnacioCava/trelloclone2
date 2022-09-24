@@ -20,6 +20,7 @@ export const Color = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: ${props => props.chosenColor ? '50%':'10%'};
 `
 
 
@@ -121,6 +122,8 @@ export const ChoiceModal = styled.div`
     border: 1px solid #e9e9e9;
     border-radius: 3px;
     padding:10px;
+    background-clip: border-box;
+    box-sizing: border-box;
     >div{
         width: 100%;
         margin:0;

@@ -95,7 +95,8 @@ export const boardReducer = (state, action) => {
                 ...state,
                 thisBoard: {
                     ...state.thisBoard,
-                    lists: state.thisBoard.lists.map(list=>list._id===payload.id? {...list, title: payload.title} : list)
+                    lists: state.thisBoard.lists.map(list=>list._id===payload.id? {...list, title: payload.title, cards: list.cards.map(card => ({...card, from: {...card.form, title: payload.title}}))} : list),
+                    allCards: state.thisBoard.allCards.map(card=>card.from._id===payload.id?{...card, from:{...card.from, title: payload.title}} : card)
                 }
             }
         case SORT_LIST_CARDS:

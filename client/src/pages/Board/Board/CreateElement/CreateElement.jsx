@@ -31,7 +31,7 @@ const CreateElement = ({create, name, area, startingValue, required}) => {
             {addElement ? 
                 <ElementForm onSubmit={handleSubmit}>
                     {area?
-                    <ElementArea ref={input} type='text' placeholder={`${name.charAt(0).toUpperCase()+name.substring(1)}`} value={elementTitle} onMouseEnter={adjustHeightToContent} onChange={(e)=>{handleChange(e); adjustHeightToContent(e)}}/>
+                    <ElementArea ref={input} type='text' placeholder={`${name.charAt(0).toUpperCase()+name.substring(1)}`} value={elementTitle} onMouseOver={adjustHeightToContent} onChange={(e)=>{handleChange(e); adjustHeightToContent(e)}}/>
                     :<ElementInput ref={input} type='text' placeholder={`${name.charAt(0).toUpperCase()+name.substring(1)}`} value={elementTitle} onChange={handleChange}/>
                     }
                     <Options>

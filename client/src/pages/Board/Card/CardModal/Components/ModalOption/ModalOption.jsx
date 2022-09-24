@@ -17,7 +17,7 @@ const ModalOption = ({type, icon, onClick, card, members, list, open, outerOpen}
     const handleChecklistTitle = (e) => setChecklistTitle(e.target.value);
 
     return (
-        <Option >
+        <Option>
             {!isOpen?
             <Info onClick={()=>setOpen(true)}>
                 <img src={icon} alt={type}/>
@@ -45,7 +45,7 @@ const ModalOption = ({type, icon, onClick, card, members, list, open, outerOpen}
                     <Close onClick={()=>open?outerOpen(false):setOpen(false)}/>
                 </Title>
                 <Colors>
-                    {colors.map((color, i) => <Color key={i} color={color} onClick={()=>handleColor({color})} style={{borderRadius:chosenColor.color===color?'50%':'10%'}}/>)}
+                    {colors.map((color, i) => <Color key={i} color={color} chosenColor={chosenColor.color===color} onClick={()=>handleColor({color})}/>)}
                     <Color><Close onClick={()=>handleColor({color:''})}/></Color>
                 </Colors>
                 <input type='text' placeholder='Label text' value={chosenColor.text} onChange={(e)=>handleColor({text:e.target.value})}/>

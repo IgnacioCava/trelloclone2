@@ -51,8 +51,8 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-//Get a full board object by id
-router.get('/:id', auth, async (req, res) => {
+// Get a full board object by id
+router.get('/id/:id', auth, async (req, res) => {
   try {
     const board = await Board.findById(req.params.id).populate({
       path: 'lists',

@@ -47,10 +47,10 @@ const Archive = ({actions, cards, lists, activity}) => {
                 <Button onClick={()=>setSelectArchive('Activity')}>View Activity</Button>
                 <Button onClick={()=>setSelectArchive('Lists')}>View Lists</Button>
                 <Button onClick={()=>setSelectArchive('Cards')}>View Cards</Button>
-                {selected.length?<Title>{selectArchive}</Title>:null}
+                {selected?.length?<Title>{selectArchive}</Title>:null}
                 <Elements>
                     {selectArchive==='Activity'?
-                        activity.map((e,i)=>
+                        activity?.map((e,i)=>
                             <Element key={i}>
                                 <From>{e.text}</From>
                                 <From>{e.date.split('T').join(', ').replaceAll('Z','')}</From>

@@ -7,6 +7,7 @@ const { check, validationResult } = require('express-validator');
 const User = require('../../models/User');
 const Board = require('../../models/Board');
 const List = require('../../models/List');
+const Card = require('../../models/Card');
 
 // Add a list
 router.post(
@@ -144,13 +145,21 @@ router.patch(
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
     try {
-      const list = await List.findById(req.params.id).select('title');
+      const list = await List.findById(req.params.id).populate('cards').select('title cards');
       if (!list) throw new Error({ message: 'List not found', status: 404 });
-      res.send("List successfully renamed to "+req.body.title);
+      
       list.title = req.body.title;
+      if(list.cards.length){
+        list.cards.forEach(async (card) => {
+          const foundCard = await Card.findById(card?._id)
+          foundCard.from = {...foundCard.from, title: req.body.title}
+          foundCard.save()
+        })
+      }
       await list.save();
+      res.send("List successfully renamed to "+req.body.title);
     } catch (err) {
-      res.status(err.status).send(err.message);
+      res.status(err.status||500).send(err.message);
     }
   }
 );

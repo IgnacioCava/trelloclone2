@@ -35,9 +35,10 @@ export const Found = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    height: 400px;
+    height: fit-content;
     align-items: flex-start;
-    width: fit-content;
+    width: 100%;
+    box-sizing: border-box;
     position: absolute;
     background-color: #eeeeee;
     overflow: auto;
@@ -48,11 +49,12 @@ export const Found = styled.div`
 `
 
 export const Input = styled.input`
-    width: 115%;
+    width: 100%;
     border: 1px solid #ccc;
     outline: none;
     transition: all 0.3s;
     padding: 5px;
+    box-sizing: border-box;
     :focus {
         border: 1px solid #2189ff;
     }

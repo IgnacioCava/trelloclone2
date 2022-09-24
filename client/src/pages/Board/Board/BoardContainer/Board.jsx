@@ -59,10 +59,10 @@ const Board = withBoard(({state, actions}) => {
         <All background={backgroundURL}>
             <BoardWrapper>
                 <div>
-                    <BoardOptions style={{display:'flex'}}>
+                    <BoardOptions>
                         <BoardTitle title={title} rename={(title)=>renameBoard(id, title)}/>
                         <Background>
-                            <CreateElement create={(url)=>changeBoardBackground(id, url)} name='background' required/>
+                            <CreateElement create={(url)=>changeBoardBackground(id, url)} name='image URL' required/>
                         </Background>
                     </BoardOptions>
                     <Members>

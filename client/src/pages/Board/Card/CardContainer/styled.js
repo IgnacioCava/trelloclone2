@@ -26,7 +26,7 @@ export const Label = styled.div`
     background-color: ${props=>props.color};
     width: fit-content;
     height: 50%;
-    min-height: 20px;
+    min-height: 26px;
     min-width: 30px;
     display: flex;
     align-items: center;

@@ -98,6 +98,6 @@ export const ElementArea = styled.textarea`
 `
 
 export const Text = styled.span`
-    white-space: pre-wrap;
+    word-break: break-word;
     width: 100%;
 `

@@ -6,8 +6,8 @@ import React, { useRef, useState } from "react";
 import ChecklistComponent from "./Components/Checklist/Checklist";
 import Section from "./Components/Section/Section"
 import MemberIcon from "../../../../components/icons/MemberIcon";
-import {textIcon, checkIcon, plus, eyeIcon, userIcon, labelIcon, cardIcon} from '../../../../assets';
-import { ScrollArea, TopData, Label, Icons, Data, ModalData, ModalOptions, ModalBody, From, FromList, Underline, Title, ModalContent, Modal} from "./styled";
+import { textIcon, checkIcon, plus, eyeIcon, userIcon, labelIcon, cardIcon } from '../../../../assets';
+import { ScrollArea, TopData, Label, Icons, Data, ModalData, ModalOptions, ModalBody, From, FromList, Underline, Title, ModalContent, Modal, Positioner} from "./styled";
 
 const CardModal = ({close, list, card, actions, members, user}) => {
 
@@ -24,7 +24,7 @@ const CardModal = ({close, list, card, actions, members, user}) => {
         <Modal ref={modal} onClick={(e)=>e.target===modal.current? close() : null}>
             <ModalContent>
                 <Section icon={cardIcon}>
-                    <div style={{display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width:'100%'}}>
+                    <Positioner>
                     <From>
                         <Title>
                             <CardTitle title={card.title} rename={(title)=>handleEditCard({title})}/>
@@ -36,7 +36,7 @@ const CardModal = ({close, list, card, actions, members, user}) => {
                         </FromList>
                     </From>
                     <Close onClick={close}/>
-                    </div>
+                    </Positioner>
                 </Section>
 
                 <ModalBody>
