@@ -76,13 +76,12 @@ export const Element = styled.div`
     flex-direction: column;
     align-items: center;
     width: 100%;
-    min-width: fit-content;
     justify-content: space-evenly;
     min-height: 100px;
     background-color: #ededed;
     border-radius: 3px;
     border: 1px solid #b1b1b1;
-    white-space: nowrap;
+    white-space: break-spaces;
 `
 
 export const Content = styled.div`
