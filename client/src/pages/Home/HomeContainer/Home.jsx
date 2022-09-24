@@ -12,8 +12,8 @@ const Home = withBoard(({state, actions}) =>{
 
     useEffect(() => {
         clear()
-        getBoards()
-    }, [])
+        if(localStorage.token) getBoards()
+    }, [localStorage.token])
 
     const [form, setForm] = useState({title:''})
     const handleChange = e => setForm({...form, title:e.target.value})
