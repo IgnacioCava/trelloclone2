@@ -4,7 +4,7 @@ import { withAuth } from "../../store/contexts/withAuth"
 import { NavBar, Buttons, LogOut } from './styled'
 
 const Navbar = withAuth(({state, actions}) => {
-    const {  logout, loadUser } = actions
+    const { logout, loadUser } = actions
     const [ username, error ] = [state.user?.username, state.user?.error]
 
     const navigate = useNavigate()

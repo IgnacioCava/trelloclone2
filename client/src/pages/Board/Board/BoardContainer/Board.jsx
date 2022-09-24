@@ -16,6 +16,7 @@ import { arrayMoveImmutable } from "array-move";
 const Board = withBoard(({state, actions}) => {
     const { id } = useParams();
     const { getBoard, renameBoard, addList, getUser, deleteMember, changeBoardBackground, sortBoardLists } = actions;
+    
     const { thisBoard, user } = state;
     const [ lists, title, members, allCards, activity, backgroundURL ] = [ thisBoard?.lists, thisBoard?.title, thisBoard?.members, thisBoard?.allCards, thisBoard?.activity, thisBoard?.backgroundURL];
 
@@ -33,7 +34,7 @@ const Board = withBoard(({state, actions}) => {
     , [members])
 
     const SortableList = SortableElement(({list, index}) => (
-        <List key={list._id} index={index} actions={actions} list={list} members={memberList} user={user} select={(card)=>setCard(card)}/>
+        <List key={list._id} index={index} list={list} members={memberList} user={user} select={(card)=>setCard(card)}/>
     ))
 
     const SortableLists = SortableContainer(({lists}) => {
@@ -67,7 +68,7 @@ const Board = withBoard(({state, actions}) => {
                     </BoardOptions>
                     <Members>
                         {memberList?.map((member,i)=> <MemberIcon key={i} member={member} onClick={()=>user.id!==member.user?deleteMember(member):null}/> )}
-                        <AutoCompleteInput actions={actions} members={members}/>
+                        <AutoCompleteInput members={members}/>
                     </Members>
                 </div>
                 <Lists>
@@ -78,9 +79,9 @@ const Board = withBoard(({state, actions}) => {
                     </div>
                 </Lists>
             </BoardWrapper>
-            <Archive actions={actions} cards={allCards.filter(e=>e.archived)} lists={lists.filter(e=>e.archived)} activity={activity}/>
+            <Archive cards={allCards.filter(e=>e.archived)} lists={lists.filter(e=>e.archived)} activity={activity}/>
 
-            {selectedCard&&<CardModal card={thisCard} list={lists.find(e=>e._id===thisCard.from._id)} close={()=>setCard(null)} actions={actions} members={memberList} user={user}/>}
+            {selectedCard && <CardModal card={thisCard} list={lists.find(e=>e._id===thisCard.from._id)} close={()=>setCard(null)} members={memberList} user={user}/>}
         </All>
     )
     else return null

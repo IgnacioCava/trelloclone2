@@ -4,11 +4,11 @@ import Button from "../../../../../../components/buttons/BlueLink";
 import MemberIcon from "../../../../../../components/icons/MemberIcon";
 import { Buttons, Color, Colors, Info, Title, CheckIcon, Option, Icons, ChoiceModal} from "./styled";
 
-const ModalOption = ({type, icon, onClick, card, members, list, open, outerOpen}) => {
+const ModalOption = ({type, icon, onClick, card, members, open, outerOpen}) => {
 
     const [isOpen, setOpen] = useState(open||false);
 
-    const [colors, setColors] = useState(['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'grey', 'black', 'brown', 'indigo', 'lime', 'magenta', 'olive', 'teal', 'violet', 'cyan']);
+    const [colors] = useState(['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'grey', 'black', 'brown', 'indigo', 'lime', 'magenta', 'olive', 'teal', 'violet', 'cyan']);
     
     const [chosenColor, setChosenColor] = useState(card.label||{});
     const handleColor = (e) => setChosenColor({...chosenColor, ...e})

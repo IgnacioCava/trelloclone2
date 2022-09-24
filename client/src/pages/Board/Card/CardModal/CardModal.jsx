@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import Close from "../../../../components/buttons/Close";
 import CardTitle from "../CardTitle/CardTitle";
 import CreateElement from "../.././Board/CreateElement/CreateElement";
@@ -8,10 +9,11 @@ import Section from "./Components/Section/Section"
 import MemberIcon from "../../../../components/icons/MemberIcon";
 import { textIcon, checkIcon, plus, eyeIcon, userIcon, labelIcon, cardIcon } from '../../../../assets';
 import { ScrollArea, TopData, Label, Icons, Data, ModalData, ModalOptions, ModalBody, From, FromList, Underline, Title, ModalContent, Modal, Positioner} from "./styled";
+import { BoardContext } from "../../../../store/contexts/BoardStore";
 
-const CardModal = ({close, list, card, actions, members, user}) => {
+const CardModal = ({close, list, card, members, user}) => {
 
-    const { editCard, toggleCardMember, addChecklist } = actions;
+    const { editCard, toggleCardMember, addChecklist} = useContext(BoardContext).dispatchedActions
     const modal = useRef(null);
 
     const [isOpen, setOpen] = useState(false);
@@ -52,7 +54,7 @@ const CardModal = ({close, list, card, actions, members, user}) => {
                                     <img src={plus} alt='plus' onClick={()=>setOpen(!isOpen)}/>
                                 </Icons>
                                     <div>
-                                        {isOpen?<ModalOption type='Members' icon={userIcon} list={list} card={card} members={members} onClick={handleToggleMembers} open={true} outerOpen={setOpen}/>:null}
+                                        {isOpen?<ModalOption type='Members' icon={userIcon} card={card} members={members} onClick={handleToggleMembers} open={true} outerOpen={setOpen}/>:null}
                                     </div>
                             </Data>
                             {card.label&&Object.values(card.label).filter(e=>e).length?<Data>
@@ -70,7 +72,7 @@ const CardModal = ({close, list, card, actions, members, user}) => {
 
                             <Section title='Checklists' icon={checkIcon}>
                                 {card.checklists.map((checklist, i) => 
-                                    <ChecklistComponent key={i} listId={list._id} cardId={card._id} checklist={checklist} actions={actions}/>
+                                    <ChecklistComponent key={i} listId={list._id} cardId={card._id} checklist={checklist}/>
                                 )}
                                 <CreateElement create={(title)=>handleAddChecklist(title)} name='checklist' required/>
                             </Section>

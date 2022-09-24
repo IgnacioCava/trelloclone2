@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useContext } from 'react';
 import ListTitle from '../ListTitle/ListTitle';
 import CreateElement from "../../Board/CreateElement/CreateElement";
 import { CreateCard, SupDiv, ListContainer, Cards } from "./styled";
@@ -9,12 +9,15 @@ import ExtendableOptions from '../../../../components/buttons/ExtendableOptions'
 
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import { arrayMoveImmutable } from "array-move";
+import { BoardContext } from '../../../../store/contexts/BoardStore';
 
-const List = ({list, actions, members, user, select}) => {
-    const { deleteList, renameList, addCard, toggleListStatus, sortListCards } = actions;
+const List = ({list, members, user, select}) => {
+
+    const { deleteList, renameList, addCard, toggleListStatus, sortListCards } = useContext(BoardContext).dispatchedActions
+
  
     const SortableCard = SortableElement(({card, index}) => (
-        <Card key={card._id} index={index} actions={actions} list={list} card={card} members={members} user={user} select={select}/>
+        <Card key={card._id} index={index} list={list} card={card} members={members} user={user} select={select}/>
     ))
 
     const SortableCards = SortableContainer(({cards}) => {

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import MemberIcon from "../../../../components/icons/MemberIcon";
 import { UserData, Email, Search, User, Found, Input } from './styled'
+import { BoardContext } from "../../../../store/contexts/BoardStore";
 
-const AutoCompleteInput = ({members, actions}) => {
-    const { findUsers, addMember } = actions;
+const AutoCompleteInput = ({members}) => {
+    const { findUsers, addMember } = useContext(BoardContext).dispatchedActions
 
     const [foundUsers, setFound] = useState([]);
     

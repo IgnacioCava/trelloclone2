@@ -17,294 +17,299 @@ var revert = {...boardState}
 export const boardReducer = (state, action) => {
     const { type, payload } = action
 
-    if(type!==BOARD_ERROR) revert = {...state}
-    switch (type) {
-        case GET_BOARDS:
-            return {
-                ...state,
-                boards: payload
-            }
-        case GET_BOARD:
-            return {
-                ...state,
-                thisBoard: {...payload, allCards: payload.lists.map(e=>e.cards).flat()}
-            }
-        case CREATE_BOARD:
-            return {
-                ...state,
-                boards: [payload, ...state.boards]
-            }
-        case CLEAR:
-            return {
-                ...state,
-                thisBoard: { allCards: [] }
-            }
-        case RENAME_BOARD:
-            return {
-                ...state,
-                boards: state.boards.map(board=> board._id===payload.id? {...board, title: payload.title} : board),
-                thisBoard: {
-                    ...state.thisBoard,
-                    title: payload.title
+    try{
+        if(type!==BOARD_ERROR) revert = {...state}
+        switch (type) {
+            case GET_BOARDS:
+                return {
+                    ...state,
+                    boards: payload
                 }
-            }
-        case SORT_BOARD_LISTS: 
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: payload
+            case GET_BOARD:
+                return {
+                    ...state,
+                    thisBoard: {...payload, allCards: payload.lists.map(e=>e.cards).flat()}
                 }
-            }
-        case CHANGE_BOARD_BACKGROUND:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    backgroundURL: payload.backgroundURL
+            case CREATE_BOARD:
+                return {
+                    ...state,
+                    boards: [payload, ...state.boards]
                 }
-            }
-        case GET_ACTIVITY:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    activity: payload
+            case CLEAR:
+                return {
+                    ...state,
+                    thisBoard: { allCards: [] }
                 }
-            }
-        case ADD_LIST:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.filter(list=>list._id!==state.thisBoard.lists.length-1), {...payload, _id: payload._id||state.thisBoard.lists.length, cards:[], archived: false}],
-                    allCards: [...state.thisBoard.allCards]
+            case RENAME_BOARD:
+                return {
+                    ...state,
+                    boards: state.boards.map(board=> board._id===payload.id? {...board, title: payload.title} : board),
+                    thisBoard: {
+                        ...state.thisBoard,
+                        title: payload.title
+                    }
                 }
-            }
-        case DELETE_LIST:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.filter(e=>e._id!==payload.id)],
-                    allCards: state.thisBoard.lists.filter(e=>e._id!==payload.id).map(list=>list.cards).flat()
+            case SORT_BOARD_LISTS: 
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: payload
+                    }
                 }
-            }
-        case RENAME_LIST:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: state.thisBoard.lists.map(list=>list._id===payload.id? {...list, title: payload.title, cards: list.cards.map(card => ({...card, from: {...card.form, title: payload.title}}))} : list),
-                    allCards: state.thisBoard.allCards.map(card=>card.from._id===payload.id?{...card, from:{...card.from, title: payload.title}} : card)
+            case CHANGE_BOARD_BACKGROUND:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        backgroundURL: payload.backgroundURL
+                    }
                 }
-            }
-        case SORT_LIST_CARDS:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: state.thisBoard.lists.map(list=>list._id===payload.id? {...list, cards: payload.newCardSort} : list)
+            case GET_ACTIVITY:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        activity: payload
+                    }
                 }
-            }
-        case TOGGLE_LIST_STATUS:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: state.thisBoard.lists.map(list=>list._id===payload.listId? {...list, archived: !list.archived} : list)
+            case ADD_LIST:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.filter(list=>list._id!==state.thisBoard.lists.length-1), {...payload, _id: payload._id||state.thisBoard.lists.length, cards:[], archived: false}],
+                        allCards: [...state.thisBoard.allCards]
+                    }
                 }
-            }
-        case ADD_CARD:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        { ...list, cards: [...list.cards.filter(card=>card._id!==list.cards.length-1), {...payload.card, archived:false, members:payload.card.members||[], checklists:[], _id:payload.card._id||list.cards.length }]} 
-                        : list
-                    )],
-                    allCards: [
-                        ...state.thisBoard.allCards.filter(card=>card._id!==state.thisBoard.allCards.length-1), 
-                        {...payload.card, archived:false, checklists:[], members:payload.card.members||[], _id:payload.card._id||state.thisBoard.allCards.length }//
-                    ]
+            case DELETE_LIST:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.filter(e=>e._id!==payload.id)],
+                        allCards: state.thisBoard.lists.filter(e=>e._id!==payload.id).map(list=>list.cards).flat()
+                    }
                 }
-            }
-        case DELETE_CARD:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        {...list, cards: [...list.cards.filter(card=>card._id!==payload.cardId)]}
-                        : list
+            case RENAME_LIST:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: state.thisBoard.lists.map(list=>list._id===payload.id? {...list, title: payload.title, cards: list.cards.map(card => ({...card, from: {...card.form, title: payload.title}}))} : list),
+                        allCards: state.thisBoard.allCards.map(card=>card.from._id===payload.id?{...card, from:{...card.from, title: payload.title}} : card)
+                    }
+                }
+            case SORT_LIST_CARDS:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: state.thisBoard.lists.map(list=>list._id===payload.id? {...list, cards: payload.newCardSort} : list)
+                    }
+                }
+            case TOGGLE_LIST_STATUS:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: state.thisBoard.lists.map(list=>list._id===payload.listId? {...list, archived: !list.archived} : list)
+                    }
+                }
+            case ADD_CARD:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
+                            { ...list, cards: [...list.cards.filter(card=>card._id!==list.cards.length-1), {...payload.card, archived:false, members:payload.card.members||[], checklists:[], _id:payload.card._id||list.cards.length }]} 
+                            : list
                         )],
-                    allCards: [...state.thisBoard.allCards.filter(e=>e._id!==payload.cardId)]
+                        allCards: [
+                            ...state.thisBoard.allCards.filter(card=>card._id!==state.thisBoard.allCards.length-1), 
+                            {...payload.card, archived:false, checklists:[], members:payload.card.members||[], _id:payload.card._id||state.thisBoard.allCards.length }//
+                        ]
+                    }
                 }
-            }
-        case EDIT_CARD:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        { ...list, cards: [...list.cards.map(card=>card._id===payload.cardId? {...card, ...payload.card} : card)] }
-                        : list
-                        )],
-                    allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId? {...card, ...payload.card} : card)]
+            case DELETE_CARD:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
+                            {...list, cards: [...list.cards.filter(card=>card._id!==payload.cardId)]}
+                            : list
+                            )],
+                        allCards: [...state.thisBoard.allCards.filter(e=>e._id!==payload.cardId)]
+                    }
                 }
-            }
-        case TOGGLE_CARD_STATUS:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        { ...list, cards: [...list.cards.map(card=>card._id===payload.cardId? {...card, archived: !card.archived} : card)] }
-                        : list
-                        )],
-                    allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId? {...card, archived: !card.archived} : card)]
+            case EDIT_CARD:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
+                            { ...list, cards: [...list.cards.map(card=>card._id===payload.cardId? {...card, ...payload.card} : card)] }
+                            : list
+                            )],
+                        allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId? {...card, ...payload.card} : card)]
+                    }
                 }
-            }
-        case GET_USER:
-            return {
-                ...state,
-                user: payload
-            }
-        case TOGGLE_CARD_MEMBER:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        { ...list, cards: [...list.cards.map(card=>card._id===payload.cardId? 
-                            {...card, 
-                                members: card.members.findIndex(member=>member.user===payload.user.user)>-1?
-                                card.members.filter(member=>member.user!==payload.user.user) : [...card.members, payload.user]
-                            } : card)]} : list)],
-                    allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId? 
-                        {...card, members: card.members.findIndex(member=>member.user===payload.user.user)>-1?
-                            card.members.filter(member=>member.user!==payload.user.user) : [...card.members, payload.user]}
-                        : card)]
+            case TOGGLE_CARD_STATUS:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
+                            { ...list, cards: [...list.cards.map(card=>card._id===payload.cardId? {...card, archived: !card.archived} : card)] }
+                            : list
+                            )],
+                        allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId? {...card, archived: !card.archived} : card)]
+                    }
                 }
-            }
-        case ADD_CHECKLIST:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        { ...list, 
-                            cards: [
-                                ...list.cards.map(card=>card._id===payload.cardId?
-                                    {...card, checklists: [ ...card.checklists.filter(checklist=>checklist._id!==card.checklists.length-1), {_id: payload._id||card.checklists.length, title: payload.title, items: []}]} : card)
-                            ]
-                        } : list)],
-                    allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId?
-                        {...card, checklists: [ ...card.checklists.filter(checklist=>checklist._id!==card.checklists.length-1), {_id: payload._id||card.checklists.length, title: payload.title, items: []}]} : card)]
+            case GET_USER:
+                return {
+                    ...state,
+                    user: payload
                 }
-            }
-        case DELETE_CHECKLIST:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        { ...list,
-                            cards: [
-                                ...list.cards.map(card=>card._id===payload.cardId?
-                                    {...card, checklists: [ ...card.checklists.filter(checklist=>checklist._id!==payload.checklistId)]} : card)
-                            ]
-                        } : list)],
-                    allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId?
-                        {...card, checklists: [ ...card.checklists.filter(checklist=>checklist._id!==payload.checklistId)]} : card)]
+            case TOGGLE_CARD_MEMBER:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
+                            { ...list, cards: [...list.cards.map(card=>card._id===payload.cardId? 
+                                {...card, 
+                                    members: card.members.findIndex(member=>member.user===payload.user.user)>-1?
+                                    card.members.filter(member=>member.user!==payload.user.user) : [...card.members, payload.user]
+                                } : card)]} : list)],
+                        allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId? 
+                            {...card, members: card.members.findIndex(member=>member.user===payload.user.user)>-1?
+                                card.members.filter(member=>member.user!==payload.user.user) : [...card.members, payload.user]}
+                            : card)]
+                    }
                 }
-            }
-        case EDIT_CHECKLIST:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        { ...list,
-                            cards: [
-                                ...list.cards.map(card=>card._id===payload.cardId?
-                                    {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, ...payload.checklist} : checklist)]} : card)
-                            ]
-                        } : list)],
-                    allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId?
-                        {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, ...payload.checklist} : checklist)]} : card)]
+            case ADD_CHECKLIST:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
+                            { ...list, 
+                                cards: [
+                                    ...list.cards.map(card=>card._id===payload.cardId?
+                                        {...card, checklists: [ ...card.checklists.filter(checklist=>checklist._id!==card.checklists.length-1), {_id: payload._id||card.checklists.length, title: payload.title, items: []}]} : card)
+                                ]
+                            } : list)],
+                        allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId?
+                            {...card, checklists: [ ...card.checklists.filter(checklist=>checklist._id!==card.checklists.length-1), {_id: payload._id||card.checklists.length, title: payload.title, items: []}]} : card)]
+                    }
                 }
-            }
-        case ADD_CHECKLIST_ITEM:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        { ...list,
-                            cards: [
-                                ...list.cards.map(card=>card._id===payload.cardId?
-                                    {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, items: [...checklist.items.filter(e=>e._id!==checklist.items.length-1), {_id: payload._id||checklist.items.length, text: payload.text, completed:false}]} : checklist)]} : card)
-                            ]
-                        } : list)],
-                    allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId?
-                        {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, items: [...checklist.items.filter(e=>e._id!==checklist.items.length-1), {_id: payload._id||checklist.items.length, text: payload.text, completed:false}]} : checklist)]} : card)]
+            case DELETE_CHECKLIST:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
+                            { ...list,
+                                cards: [
+                                    ...list.cards.map(card=>card._id===payload.cardId?
+                                        {...card, checklists: [ ...card.checklists.filter(checklist=>checklist._id!==payload.checklistId)]} : card)
+                                ]
+                            } : list)],
+                        allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId?
+                            {...card, checklists: [ ...card.checklists.filter(checklist=>checklist._id!==payload.checklistId)]} : card)]
+                    }
                 }
-            }
-        case DELETE_CHECKLIST_ITEM:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        { ...list,
-                            cards: [
-                                ...list.cards.map(card=>card._id===payload.cardId?
-                                    {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, items: [...checklist.items.filter(item=>item._id!==payload.itemId)]} : checklist)]} : card)
-                            ]
-                        } : list)],
-                    allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId?
-                        {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, items: [...checklist.items.filter(item=>item._id!==payload.itemId)]} : checklist)]} : card)]
+            case EDIT_CHECKLIST:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
+                            { ...list,
+                                cards: [
+                                    ...list.cards.map(card=>card._id===payload.cardId?
+                                        {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, ...payload.checklist} : checklist)]} : card)
+                                ]
+                            } : list)],
+                        allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId?
+                            {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, ...payload.checklist} : checklist)]} : card)]
+                    }
                 }
-            }
-        case EDIT_CHECKLIST_ITEM:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
-                        { ...list,
-                            cards: [
-                                ...list.cards.map(card=>card._id===payload.cardId?
-                                    {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, items: [...checklist.items.map(item=>item._id===payload.itemId? {...item, ...payload.formData} : item)]} : checklist)]} : card)
-                            ]
-                        } : list)],
-                    allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId?
-                        {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, items: [...checklist.items.map(item=>item._id===payload.itemId? {...item, ...payload.formData} : item)]} : checklist)]} : card)]
+            case ADD_CHECKLIST_ITEM:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
+                            { ...list,
+                                cards: [
+                                    ...list.cards.map(card=>card._id===payload.cardId?
+                                        {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, items: [...checklist.items.filter(e=>e._id!==checklist.items.length-1), {_id: payload._id||checklist.items.length, text: payload.text, completed:false}]} : checklist)]} : card)
+                                ]
+                            } : list)],
+                        allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId?
+                            {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, items: [...checklist.items.filter(e=>e._id!==checklist.items.length-1), {_id: payload._id||checklist.items.length, text: payload.text, completed:false}]} : checklist)]} : card)]
+                    }
                 }
-            }
-        case ADD_MEMBER:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    members: payload
+            case DELETE_CHECKLIST_ITEM:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
+                            { ...list,
+                                cards: [
+                                    ...list.cards.map(card=>card._id===payload.cardId?
+                                        {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, items: [...checklist.items.filter(item=>item._id!==payload.itemId)]} : checklist)]} : card)
+                                ]
+                            } : list)],
+                        allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId?
+                            {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, items: [...checklist.items.filter(item=>item._id!==payload.itemId)]} : checklist)]} : card)]
+                    }
                 }
-            }
-        case DELETE_MEMBER:
-            return {
-                ...state,
-                thisBoard: {
-                    ...state.thisBoard,
-                    members: [...state.thisBoard.members.filter(member=>member.user!==payload)]
+            case EDIT_CHECKLIST_ITEM:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        lists: [...state.thisBoard.lists.map(list=>list._id===payload.listId?
+                            { ...list,
+                                cards: [
+                                    ...list.cards.map(card=>card._id===payload.cardId?
+                                        {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, items: [...checklist.items.map(item=>item._id===payload.itemId? {...item, ...payload.formData} : item)]} : checklist)]} : card)
+                                ]
+                            } : list)],
+                        allCards: [...state.thisBoard.allCards.map(card=>card._id===payload.cardId?
+                            {...card, checklists: [ ...card.checklists.map(checklist=>checklist._id===payload.checklistId? {...checklist, items: [...checklist.items.map(item=>item._id===payload.itemId? {...item, ...payload.formData} : item)]} : checklist)]} : card)]
+                    }
                 }
-            }
-        case BOARD_ERROR:
-            return {
-                ...revert
-            }
-        default:
-            return state
+            case ADD_MEMBER:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        members: payload
+                    }
+                }
+            case DELETE_MEMBER:
+                return {
+                    ...state,
+                    thisBoard: {
+                        ...state.thisBoard,
+                        members: [...state.thisBoard.members.filter(member=>member.user!==payload)]
+                    }
+                }
+            case BOARD_ERROR:
+                return {
+                    ...revert
+                }
+            default:
+                return state
+        }
+    } catch(err) {
+        return state
     }
+    
 }

@@ -21,7 +21,7 @@ export const getBoards = () => async dispatch => {
         const res = await baseURL.get('/boards', {headers: {'Content-Type': 'application/json', token: localStorage.getItem('token')}})
         act(dispatch, GET_BOARDS, res.data)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
@@ -39,7 +39,7 @@ export const getBoard = id => async dispatch => {
             delete config.headers.boardId;
         }
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }    
 }
 
@@ -49,7 +49,7 @@ export const createBoard = formData => async dispatch => {
         const res = await baseURL.post('/boards', body, config)
         act(dispatch, CREATE_BOARD, res.data)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
@@ -59,7 +59,7 @@ export const renameBoard = (id, title) => async dispatch => {
         const body = JSON.stringify({title})
         await baseURL.patch(`/boards/rename/${id}`, body, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
     getActivity()(dispatch)
 }
@@ -70,7 +70,7 @@ export const sortBoardLists = (newListSort) => async dispatch => {
         const body = JSON.stringify({newListSort: newListSort.map(e=>e._id)})
         await baseURL.patch(`/boards/sort`, body, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
@@ -83,7 +83,7 @@ export const changeBoardBackground = (id, backgroundURL) => async dispatch => {
             const body = JSON.stringify({backgroundURL})
             await baseURL.patch(`/boards/background/${id}`, body, config)
         } catch (err) {
-            act(dispatch, BOARD_ERROR, err.response.data.message)
+            act(dispatch, BOARD_ERROR, err.response?.data.message)
         }
     }
     else{
@@ -93,7 +93,7 @@ export const changeBoardBackground = (id, backgroundURL) => async dispatch => {
                 const body = JSON.stringify({backgroundURL})
                 baseURL.patch(`/boards/background/${id}`, body, config)
             } catch (err) {
-                act(dispatch, BOARD_ERROR, err.response.data.message)
+                act(dispatch, BOARD_ERROR, err.response?.data.message)
             }
         }
         img.onerror = () => {
@@ -111,7 +111,7 @@ export const addList = title => async dispatch => {
         act(dispatch, ADD_LIST, res.data)
         
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
     getActivity()(dispatch)
 }
@@ -121,7 +121,7 @@ export const deleteList = id => async dispatch => {
         act(dispatch, DELETE_LIST, {id})
         await baseURL.delete(`/lists/${id}`, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
     getActivity()(dispatch)
 }
@@ -132,7 +132,7 @@ export const renameList = (id, title) => async dispatch => {
         const body = JSON.stringify({title})
         await baseURL.patch(`/lists/rename/${id}`, body, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
     getActivity()(dispatch)
 }
@@ -143,7 +143,7 @@ export const sortListCards = (id, newCardSort) => async dispatch => {
         const body = JSON.stringify({newCardSort: newCardSort.map(e=>e._id)})
         await baseURL.patch(`/lists/sort/${id}`, body, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
@@ -152,7 +152,7 @@ export const toggleListStatus = listId => async dispatch => {
         act(dispatch, TOGGLE_LIST_STATUS, {listId})
         await baseURL.patch(`/lists/archive/${listId}`, {}, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
     getActivity()(dispatch)
 }
@@ -164,7 +164,7 @@ export const addCard = (listId, title) => async dispatch => {
         const res = await baseURL.post(`/cards`, body, config)
         act(dispatch, ADD_CARD, res.data)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
     getActivity()(dispatch)
 }
@@ -174,7 +174,7 @@ export const deleteCard = (listId, cardId) => async dispatch => {
         act(dispatch, DELETE_CARD, {listId, cardId})
         await baseURL.delete(`/cards/${listId}/${cardId}`, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
     getActivity()(dispatch)
 }
@@ -185,7 +185,7 @@ export const editCard = (formData, cardId, listId) => async dispatch => {
         const body = JSON.stringify(formData)
         await baseURL.patch(`/cards/edit/${cardId}`, body, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
     getActivity()(dispatch)
 }
@@ -195,7 +195,7 @@ export const toggleCardStatus = (listId, cardId) => async dispatch => {
         act(dispatch, TOGGLE_CARD_STATUS, {listId, cardId})
         await baseURL.patch(`/cards/archive/${cardId}`, {}, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
     getActivity()(dispatch)
 }
@@ -205,7 +205,7 @@ export const getUser = () => async dispatch => {
         const res = await baseURL.get(`/users/token`, config)
         act(dispatch, GET_USER, res.data)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
@@ -214,7 +214,7 @@ export const toggleCardMember = (user, cardId, listId) => async dispatch => {
         act(dispatch, TOGGLE_CARD_MEMBER, {user, cardId, listId})
         await baseURL.put(`/cards/togglemember/${user.user}/${cardId}`, {}, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
     getActivity()(dispatch)
 }
@@ -226,7 +226,7 @@ export const addChecklist = (title, cardId, listId) => async dispatch => {
         const res = await baseURL.post(`/checklists/${cardId}`, body, config)
         act(dispatch, ADD_CHECKLIST, {_id: res.data, title, cardId, listId})
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
@@ -235,7 +235,7 @@ export const deleteChecklist = (checklistId, cardId, listId) => async dispatch =
         act(dispatch, DELETE_CHECKLIST, {checklistId, cardId, listId})
         await baseURL.delete(`/checklists/${cardId}/${checklistId}`, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
@@ -245,7 +245,7 @@ export const renameChecklist = (title, checklistId, cardId, listId) => async dis
         const body = JSON.stringify({title})
         await baseURL.patch(`/checklists/${cardId}/${checklistId}`, body, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
@@ -256,7 +256,7 @@ export const addChecklistItem = (text, checklistId, cardId, listId) => async dis
         const res = await baseURL.post(`/checklists/item/${cardId}/${checklistId}`, body, config)
         act(dispatch, ADD_CHECKLIST_ITEM, {_id: res.data._id, text, cardId, listId, checklistId})
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
@@ -265,7 +265,7 @@ export const deleteChecklistItem = (itemId, checklistId, cardId, listId) => asyn
         act(dispatch, DELETE_CHECKLIST_ITEM, {itemId, checklistId, cardId, listId})
         await baseURL.delete(`/checklists/item/${cardId}/${checklistId}/${itemId}`, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
@@ -275,7 +275,7 @@ export const editChecklistItem = (formData, itemId, checklistId, cardId, listId)
         const body = JSON.stringify(formData)
         await baseURL.patch(`/checklists/item/${cardId}/${checklistId}/${itemId}`, body, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
@@ -296,7 +296,7 @@ export const deleteMember = (user) => async dispatch => {
         act(dispatch, DELETE_MEMBER, user.user)
         await baseURL.put(`/boards/members/remove/${user.user}`, {}, config)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }
 
@@ -309,6 +309,6 @@ export const getActivity = () => async dispatch => {
         const res = await baseURL.get(`/boards/activity`, config)
         act(dispatch, GET_ACTIVITY, res.data)
     } catch (err) {
-        act(dispatch, BOARD_ERROR, err.response.data.message)
+        act(dispatch, BOARD_ERROR, err.response?.data.message)
     }
 }

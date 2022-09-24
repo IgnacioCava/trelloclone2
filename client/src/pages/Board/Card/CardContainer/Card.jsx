@@ -1,16 +1,16 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useContext } from 'react';
 import CardTitle from '../CardTitle/CardTitle';
-import CardModal from '../CardModal/CardModal';
 import { textIcon, eyeIcon, checkIconWhite, checkIcon } from '../../../../assets';
 import { Completed, WithLabel, Label, CardIcons, MemberIcons, Body, Title, CardHolder} from './styled'
 import MemberIcon from '../../../../components/icons/MemberIcon';
 import ExtendableOptions from '../../../../components/buttons/ExtendableOptions';
 import DnDHandler from '../../../../components/buttons/DnDHandler';
+import { BoardContext } from '../../../../store/contexts/BoardStore';
 
-const Card = ({card, list, actions, members, user, select}) => {
-    const { deleteCard, editCard, toggleCardStatus } = actions;
+const Card = ({card, list, members, user, select}) => {
+    
+    const { deleteCard, editCard, toggleCardStatus } = useContext(BoardContext).dispatchedActions
 
-    const [openModal, setOpen] = useState(false);
     const modal = useRef(null);
     const completedItems = useMemo(()=>card.checklists.map(e=>e.items).map(e=>e.map(e=>e.completed)).flat().map(e=>e===true?1:0).reduce((a,b)=>a+b,0), [card.checklists]);
     const allItems = useMemo(()=>card.checklists.map(e=>e.items).flat().length, [card.checklists]);
@@ -47,7 +47,6 @@ const Card = ({card, list, actions, members, user, select}) => {
                     <MemberIcon key={i} member={member} diameter={28}/>:null)}
                 </MemberIcons>
             </Body>
-            {/* {openModal?<CardModal card={card} list={list} close={()=>select(null)} actions={actions} members={members} user={user}/>:null} */}
         </CardHolder>
     )
     else return <div></div>

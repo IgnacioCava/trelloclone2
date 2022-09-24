@@ -1,12 +1,13 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useContext } from 'react'
 import EditableInput from '../../../../../../components/Inputs/EditableInput'
 import CreateElement from '../../../../Board/CreateElement/CreateElement'
 import ExtendableOptions from '../../../../../../components/buttons/ExtendableOptions'
+import { BoardContext } from '../../../../../../store/contexts/BoardStore'
 import { Progress, Max, Current, Title, ChecklistItem, Checklist } from './styled'
 
-const ChecklistComponent = ({listId, cardId, actions, checklist}) => {
+const ChecklistComponent = ({listId, cardId, checklist}) => {
 
-    const { renameChecklist, deleteChecklist, addChecklistItem, deleteChecklistItem, editChecklistItem } = actions;
+    const { renameChecklist, deleteChecklist, addChecklistItem, deleteChecklistItem, editChecklistItem } = useContext(BoardContext).dispatchedActions
 
     const handleRenameChecklist = formData => renameChecklist(formData, checklist._id, cardId, listId)
     const handleDeleteChecklist = () => deleteChecklist(checklist._id, cardId, listId)

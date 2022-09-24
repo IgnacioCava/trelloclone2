@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Button from '../../../../components/buttons/BlueLink';
 import { Restore, Delete, Title, From, Options, Elements, Element, Content, ArchiveWrapper, Widget, Error} from './styled';
+import { BoardContext } from '../../../../store/contexts/BoardStore';
 
-const Archive = ({actions, cards, lists, activity}) => {
+const Archive = ({cards, lists, activity}) => {
 
-    const { deleteList, toggleListStatus, deleteCard, toggleCardStatus, getActivity } = actions;
+    const { deleteList, toggleListStatus, deleteCard, toggleCardStatus, getActivity } = useContext(BoardContext).dispatchedActions
 
     const [isOpen, setIsOpen] = useState(false);
     const [selectArchive, setSelectArchive] = useState('');
