@@ -43,7 +43,7 @@ router.post('/', [auth, [check('title', 'Title is required').not().isEmpty()]],
 // Get user's boards
 router.get('/', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).populate('boards', { _id: 1, title: 1 }).select('boards');
+    const user = await User.findById(req.user.id).populate('boards').select('boards');
     if(!user) throw {message: 'User not found', status: 404}
     res.json(user.boards);
   } catch (err) {
