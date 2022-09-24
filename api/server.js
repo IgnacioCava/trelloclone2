@@ -25,6 +25,14 @@ const app = express();
 // Init middleware
 app.use(express.json({ extended: false }));
 
+// CORS
+app.all((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next()
+});
+
+// Preflight
 app.use('/', (req, res, next) => {
   if (req.method === 'OPTIONS') {
     res.status(200).end()

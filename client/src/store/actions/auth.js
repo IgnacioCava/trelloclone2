@@ -10,7 +10,7 @@ const config = {
 export const register = (formData, redirect) => async dispatch => {
     try{
         const body = JSON.stringify(formData)
-        const response = await baseURL.post('/api/auth/register', body, config )
+        const response = await baseURL.post('/auth/register', body, config )
         localStorage.setItem('token', response.data.token)
         await dispatch(loadUser())
         redirect()
@@ -26,7 +26,7 @@ export const register = (formData, redirect) => async dispatch => {
 export const login = (formData, redirect) => async dispatch => {
     try{
         const body = JSON.stringify(formData)
-        const response = await baseURL.post('/api/auth/login', body, config )
+        const response = await baseURL.post('/auth/login', body, config )
         localStorage.setItem('token', response.data.token)
         await dispatch(loadUser())
         redirect()
@@ -43,7 +43,7 @@ export const loadUser = () => async (dispatch) => {
     try {
         const token = localStorage.getItem('token')
 
-        const res = await baseURL.get('/api/auth', {headers: {token}});
+        const res = await baseURL.get('/auth', {headers: {token}});
         dispatch({
             type: SET_USER,
             payload: res.data,

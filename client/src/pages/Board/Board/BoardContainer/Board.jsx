@@ -17,7 +17,7 @@ const Board = withBoard(({state, actions}) => {
     const { id } = useParams();
     const { getBoard, renameBoard, addList, getUser, deleteMember, changeBoardBackground, sortBoardLists } = actions;
     const { thisBoard, user } = state;
-    const [lists, title, members, allCards, activity, backgroundURL] = [ thisBoard?.lists, thisBoard?.title, thisBoard?.members, thisBoard?.allCards, thisBoard?.activity, thisBoard?.backgroundURL];
+    const [ lists, title, members, allCards, activity, backgroundURL ] = [ thisBoard?.lists, thisBoard?.title, thisBoard?.members, thisBoard?.allCards, thisBoard?.activity, thisBoard?.backgroundURL];
 
     useEffect(() => {
         getBoard(id)
@@ -28,9 +28,9 @@ const Board = withBoard(({state, actions}) => {
 
     const thisCard = allCards.find(e=>e._id===selectedCard)
 
-    const memberList = useMemo(()=>{
-        return members?.map(member=>{return {...member, color: `hsla(${~~(360 * Math.random())},70%,70%,0.8)`}});
-    }, [members])
+    const memberList = useMemo(()=>
+        members?.map(member=>{return {...member, color: `hsla(${~~(360 * Math.random())},70%,70%,1)`}})
+    , [members])
 
     const SortableList = SortableElement(({list, index}) => (
         <List key={list._id} index={index} actions={actions} list={list} members={memberList} user={user} select={(card)=>setCard(card)}/>

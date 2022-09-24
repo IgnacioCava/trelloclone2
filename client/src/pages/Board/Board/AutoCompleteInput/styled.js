@@ -46,6 +46,7 @@ export const Found = styled.div`
     gap: 10px;
     z-index: 1;
     border: 1px solid #cccccc;
+    border-radius: 5px;
 `
 
 export const Input = styled.input`
@@ -55,6 +56,8 @@ export const Input = styled.input`
     transition: all 0.3s;
     padding: 5px;
     box-sizing: border-box;
+    border-radius: 5px;
+    overflow: hidden;
     :focus {
         border: 1px solid #2189ff;
     }

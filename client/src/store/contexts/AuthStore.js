@@ -7,12 +7,7 @@ export const AuthContext = createContext()
 export default function AuthStore(props) {
     const [auth, authDispatch] = useReducer(authReducer, authState)
 
-    const dispatchedActions = {
-        register: (...e)=>actions.register(...e)(authDispatch),
-        login: (...e)=>actions.login(...e)(authDispatch),
-        loadUser: (...e)=>actions.loadUser()(authDispatch),
-        logout: (...e)=>actions.logout(...e)(authDispatch)
-    }
+    const dispatchedActions = Object.assign(...Object.keys(actions).map(func => ({[func]: (...args) => actions[func](...args)(authDispatch)})))
     
     const value = {auth, dispatchedActions}
 
