@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const AuthAction = styled.div`
-    width: 80%;
+    width: 100%;
     height: 3rem;
     border: none;
     border-radius: 5px;
@@ -11,7 +11,6 @@ export const AuthAction = styled.div`
     color: white;
     font: bold 1.2rem 'Roboto', sans-serif;
     *{cursor: ${props => props.disabled ? 'default' : 'pointer'}}
-    transition: all 0.2s ease-in-out;
     overflow: hidden;
     margin:5px;
     filter: ${props => props.disabled ? 'brightness(60%)' : 'brightness(100%)'};

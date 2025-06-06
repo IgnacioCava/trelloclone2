@@ -9,14 +9,16 @@ export const Error = styled.span`
 `
 
 export const InputWrapper = styled.div`
+    width: 100%;
     display: flex;
     flex-direction: column;
     max-width: 100%;
     align-items: flex-start;
+    margin-bottom: 20px;
 `
 
 export const Input = styled.input`
-    width: ${props => props.length+2+'ch'};
+    width: 100%;
     max-width: 100%;
     border: 1px solid #ccc;
     border-radius: 3px;
