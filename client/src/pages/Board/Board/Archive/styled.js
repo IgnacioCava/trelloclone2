@@ -90,12 +90,12 @@ export const Content = styled.div`
     justify-content: flex-start;
     flex-direction: column;
     transition: all 0.3s ease-in-out;
-    width: ${props=>props.open?'100%':'0'};
+    width: ${props=>props.open?'100%':'0%'};
     overflow: hidden;
     height: 100%;
     overflow-y: auto;
     gap: 10px;
-    padding-top: 5px;
+    padding: ${props=>props.open?'10px':'0px'};
     box-sizing: border-box;
     >div{
         white-space: nowrap;
@@ -111,7 +111,9 @@ export const ArchiveWrapper = styled.div`
     z-index: 0;
     background-color: #0000007d;
     color:white;
-    position: relative;
+    position: absolute;
+    top: 0;
+    right: 0;
 `
 
 export const Widget = styled.div`

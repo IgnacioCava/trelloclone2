@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const cors = require('cors');
+
 require('dotenv').config();
 
 const app = express();
@@ -26,20 +28,9 @@ const app = express();
 app.use(express.json({ extended: false }));
 
 // CORS
-app.all((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next()
-});
-
-// Preflight
-app.use('/', (req, res, next) => {
-  if (req.method === 'OPTIONS') {
-    res.status(200).end()
-    return
-  }
-  else next()
-})
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:3000'
+}));
 
 // Define routes
 app.use('/api/users', require('./routes/api/users'));
@@ -48,6 +39,9 @@ app.use('/api/boards', require('./routes/api/boards'));
 app.use('/api/lists', require('./routes/api/lists'));
 app.use('/api/cards', require('./routes/api/cards'));
 app.use('/api/checklists', require('./routes/api/checklists'));
+app.get('/', (req, res) => {
+  res.send('Server running')
+})
 
 const PORT = process.env.PORT || 5000;
 

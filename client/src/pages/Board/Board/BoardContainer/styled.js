@@ -15,6 +15,7 @@ export const BoardWrapper = styled.div`
     width: 100%;
     overflow: auto;
     position: relative;
+    backdrop-filter: blur(10px);
     ::-webkit-scrollbar {
         height: 10px;
         background: transparent;
@@ -40,6 +41,7 @@ export const All = styled.div`
     height: calc(100% - 60px);
     background-image: ${props => props.background? `url(${props.background})` : 'none'};
     background-size: cover;
+    position: relative
 `
 
 export const Background = styled.div`
